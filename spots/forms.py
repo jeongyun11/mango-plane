@@ -1,10 +1,10 @@
 from django import forms
-from .models import Article, Comment
+from .models import Spot, Comment
 
 
-class ArticleForm(forms.ModelForm):
+class SpotForm(forms.ModelForm):
     class Meta:
-        model = Article
+        model = Spot
         fields = ('title', 'content', 'image', 'category')
 
 

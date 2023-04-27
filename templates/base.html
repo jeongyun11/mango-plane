@@ -47,8 +47,8 @@
       {% if request.user.is_authenticated %}
       <p class="fs-6 mb-0 mx-2" style="vertical-align: middle">{{ user }}님 안녕하세요. </p>
         <!-- Button trigger modal -->
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-          모달
+        <button type="button" style="width: 70px; height: 70px; padding: 0;" class="btn btn-lg rounded-circle" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          <img class="rounded-circle" style="width: 100%; height: 100%; object-fit: cover;" src="{{ user.image.url }}" alt="Profile Image">
         </button>
         <!-- Modal -->
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

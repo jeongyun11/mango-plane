@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Spot, Comment
 from .forms import SpotForm, CommentForm
+from django.contrib.auth import get_user_model
 
 
 def index(request):

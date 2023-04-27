@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block style %}
+  mal {
+    margin-left: 50px;
+  }
+  a {
+    text-decoration: none; /* 밑줄 제거 */
+  }
+{% endblock style %}
+{% block content %}
+<div class = "container text-center">
+    <div style = "display: inline-block;">
+    <div class="card" class = "mx-auto" style = "width : 400px;">
+      {% if request.user.image %}
+        <img src="{{ request.user.image.url }}" class="card-img-top rounded-2 mx-auto mt-4" style = "width: 300px;" alt="image">
+      {% else %}
+        <img src="{% static 'not-found-user.png' %}" class="card-img-top rounded-2 mx-auto mt-4" alt="image">
+      {% endif %}
+      <div class="card-body mal">
+        <h4 class="card-text card_title">{{ request.user }}</h4>
+        <p class="card-text">{{article.title}}</p>
+        <p class="card-text">이름: {{ request.user.last_name }}{{ request.user.first_name }}</p> 
+        <p class="card-text">이메일: {{ request.user.email }}</p> 
+      </div>
+    </div>
+    {% comment %} <div class = 'd-flex'>
+      <a href="{% url 'accounts:update' %}">
+        <button type="button" class="btn btn-danger m-3">프로필 수정</button>
+      </a>
+      <a href="{% url 'accounts:password_change' %}">
+        <button type="button" class="btn btn-danger m-3">비밀번호 변경</button>
+      </a>
+      <form action="{% url 'accounts:delete' %}" method="POST">
+        {% csrf_token %}
+        <input type="submit" class="btn btn-danger m-3" value="회원탈퇴">
+      </form>
+    </div> {% endcomment %}
+  </div>
+  <br>
+  <br>
+  <h4>작성한 후기</h4>
+  <hr>
+  <div class="container mt-4" >
+      <div class="row g-4">
+        {% for article in articles %}
+            <div class="col-md-3 col-sm-6 col-12">
+              <a href="{% url 'articles:detail' article.pk %}">
+                <div class="card">
+                  {% if article.image %}
+                    <img src="{{ article.image.url }}" class="card-img-top rounded-2"  alt="image">
+                  {% else %}
+                    <img src="{% static 'No-Image-Placeholder.svg.png' %}" class="card-img-top" alt="image">
+                  {% endif %}
+                  <div class="card-body p-0 mt-1">
+                    <p class="card-text">{{article.title}}</p> 
+                  </div>
+                </div>
+              </a>
+            </div>
+        {% empty %}
+        <p>아직 리뷰가 없어요.</p>
+        {% endfor %}
+      </div>
+  </div>
+</div>
+{% endblock content %}

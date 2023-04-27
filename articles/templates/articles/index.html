@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block style %}
+    a {
+      text-decoration: none; /* 밑줄 제거 */
+    }
+    .card {
+      border: none;
+      padding: 0px;
+    }
+    .card-text {
+      margin-bottom: 5px;
+      font-size: 15px;
+      font-weight: 200;
+      margin-bottom: 0px;
+    }
+    .card_title{
+      font-size: 23px;
+      font-weight: 600;
+      margin-top: 5px;
+      margin-bottom: 10px;
+    }
+{% endblock style %}
+{% block content %}
+
+  <!--카드-->
+  <div class="container mt-4" >
+      <div class="row g-4">
+        {% for article in articles %}
+            <div class="col-md-4">
+              <a href="{% url 'articles:detail' article.pk %}">
+                <div class="card">
+                  {% if article.image %}
+                    <img src="{{ article.image.url }}" class="card-img-top rounded-2"  alt="image">
+                  {% else %}
+                    <img src="{% static 'No-Image-Placeholder.svg.png' %}" class="card-img-top" alt="image">
+                  {% endif %}
+                  <div class="card-body p-0">
+                    <p class="card-text">{{article.title}}</p>
+                    <p class="card-text">작성자: {{article.user}}</p> 
+                  </div>
+                </div>
+              </a>
+            </div>
+        {% empty %}
+        <p>아직 리뷰가 없어요.</p>
+        {% endfor %}
+      </div>
+  </div>
+
+{% endblock content %}
+

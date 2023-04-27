@@ -2,7 +2,7 @@
 {% block content %}
   <div>
     <h1>회원가입</h1>
-    <form action="{% url 'accounts:signup' %}" method="POST">
+    <form action="{% url 'accounts:signup' %}" method="POST" enctype="multipart/form-data">
       {{ form.as_p }}
       {% csrf_token %}
       <input type="submit" value="회원 가입">

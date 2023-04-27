@@ -19,7 +19,7 @@
       {% endif %}
       <div class="card-body mal">
         <h4 class="card-text card_title">{{ request.user }}</h4>
-        <p class="card-text">{{article.title}}</p>
+        <p class="card-text">{{spot.title}}</p>
         <p class="card-text">이름: {{ request.user.last_name }}{{ request.user.first_name }}</p> 
         <p class="card-text">이메일: {{ request.user.email }}</p> 
       </div>
@@ -43,17 +43,17 @@
   <hr>
   <div class="container mt-4" >
       <div class="row g-4">
-        {% for article in articles %}
+        {% for spot in spots %}
             <div class="col-md-3 col-sm-6 col-12">
-              <a href="{% url 'articles:detail' article.pk %}">
+              <a href="{% url 'spots:detail' spot.pk %}">
                 <div class="card">
-                  {% if article.image %}
-                    <img src="{{ article.image.url }}" class="card-img-top rounded-2"  alt="image">
+                  {% if spot.image %}
+                    <img src="{{ spot.image.url }}" class="card-img-top rounded-2"  alt="image">
                   {% else %}
                     <img src="{% static 'No-Image-Placeholder.svg.png' %}" class="card-img-top" alt="image">
                   {% endif %}
                   <div class="card-body p-0 mt-1">
-                    <p class="card-text">{{article.title}}</p> 
+                    <p class="card-text">{{spot.title}}</p> 
                   </div>
                 </div>
               </a>

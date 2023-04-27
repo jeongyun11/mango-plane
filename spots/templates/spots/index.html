@@ -26,18 +26,18 @@
   <!--카드-->
   <div class="container mt-4" >
       <div class="row g-4">
-        {% for article in articles %}
+        {% for spot in spots %}
             <div class="col-md-4">
-              <a href="{% url 'articles:detail' article.pk %}">
+              <a href="{% url 'spots:detail' spot.pk %}">
                 <div class="card">
-                  {% if article.image %}
-                    <img src="{{ article.image.url }}" class="card-img-top rounded-2"  alt="image">
+                  {% if spot.image %}
+                    <img src="{{ spot.image.url }}" class="card-img-top rounded-2"  alt="image">
                   {% else %}
                     <img src="{% static 'No-Image-Placeholder.svg.png' %}" class="card-img-top" alt="image">
                   {% endif %}
                   <div class="card-body p-0">
-                    <p class="card-text">{{article.title}}</p>
-                    <p class="card-text">작성자: {{article.user}}</p> 
+                    <p class="card-text">{{spot.title}}</p>
+                    <p class="card-text">작성자: {{spot.user}}</p> 
                   </div>
                 </div>
               </a>

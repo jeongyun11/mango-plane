@@ -2,35 +2,35 @@
 {% block content %}
   <div>
     <p>게시글 제목 -
-    {{article.title}}
+    {{spot.title}}
     </p>
     <hr>
     <p>게시글 작성자 -
-      {{article.user}}</p>
+      {{spot.user}}</p>
     <p>
-    {% if article.user == user %}
-      <a href="{% url 'articles:update_article' article.pk %}" class="btn btn-primary me-2">
+    {% if spot.user == user %}
+      <a href="{% url 'spots:update_spot' spot.pk %}" class="btn btn-primary me-2">
         <span>수정</span>
       </a>
-      <form action="{% url 'articles:delete' article.pk %}" method="POST" class="d-inline-block">
+      <form action="{% url 'spots:delete' spot.pk %}" method="POST" class="d-inline-block">
         {% csrf_token %}
         <input type="submit" value="삭제" class="btn btn-danger">
       </form>
     {% else %}
     {% endif %}
     <hr>
-    {% if article.image %}
+    {% if spot.image %}
         <div class="mb-3">
-          <img src="{{ article.image.url }}" alt="{{article.title}}">
+          <img src="{{ spot.image.url }}" alt="{{spot.title}}">
         </div>
     {% endif %}
     <p>
-      {{article.content}}
+      {{spot.content}}
     </p>
 
-    <form action="{%url 'articles:likes' article.pk %}" method="POST">
+    <form action="{%url 'spots:likes' spot.pk %}" method="POST">
       {% csrf_token %}
-      {% if request.user in article.like_users.all %}
+      {% if request.user in spot.like_users.all %}
         <input type="submit" value = "가고싶다 취소">
       {% else %}
         <input type="submit" value = "가고싶다">
@@ -38,7 +38,7 @@
     </form>    
   </div>
   <hr>
-  <form action="{% url 'articles:comment_create' article.pk %}" method="post" enctype="multipart/form-data">
+  <form action="{% url 'spots:comment_create' spot.pk %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ comment_form.as_p }}
     <input type="submit" value="추가리뷰 작성">
@@ -59,7 +59,7 @@
         {{comment.content}}
       </p>
 
-      <form action="{%url 'articles:comment_likes' article.pk comment.pk %}" method="POST">
+      <form action="{%url 'spots:comment_likes' spot.pk comment.pk %}" method="POST">
         {% csrf_token %}
         {% if request.user in comment.like_users.all %}
           <input type="submit" value = "좋아요 취소">
@@ -69,7 +69,7 @@
       </form>
 
       {% if comment.user == user %}
-        <form action="{% url 'articles:comment_delete' article.pk comment.pk %}" method="POST">
+        <form action="{% url 'spots:comment_delete' spot.pk comment.pk %}" method="POST">
           {% csrf_token %}
           <input type="submit" value="댓글 삭제">
         </form>

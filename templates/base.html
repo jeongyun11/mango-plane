@@ -18,20 +18,21 @@
     .tab-content {
       display: none;
     }
+
   {%block style%}
   {%endblock style%}
   </style>
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg bg-body border-bottom">
+  <nav class="navbar navbar-expand bg-body border-bottom">
     <div class="d-flex container">
       <a class="me-auto navbar-brand" href="{% url 'spots:index' %}">
         <img src="{% static 'logo3.png' %}" alt="logo" width="151">
       </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      {% comment %} <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse ms-3" id="navbarNav">
+      </button> {% endcomment %}
+      <div class="ms-3" id="navbarNav">
         <ul class="navbar-nav">
           <li class="nav-item">
             <a class="nav-link" href="{% url 'spots:index' %}">Home</a>
@@ -45,13 +46,13 @@
         </ul>
       </div>
       {% if request.user.is_authenticated %}
-      <p class="fs-6 mb-0 mx-2" style="vertical-align: middle">{{ user }}님 안녕하세요. </p>
+      {% comment %} <p class="fs-6 mb-0 mx-2" style="vertical-align: middle">{{ user }}님 안녕하세요. </p> {% endcomment %}
         <!-- Button trigger modal -->
         <button type="button" style="width: 70px; height: 70px; padding: 0;" class="btn btn-lg rounded-circle" data-bs-toggle="modal" data-bs-target="#exampleModal">
           <img class="rounded-circle" style="width: 100%; height: 100%; object-fit: cover;" src="{{ user.image.url }}" alt="Profile Image">
         </button>
         <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">

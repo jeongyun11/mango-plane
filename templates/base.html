@@ -49,7 +49,11 @@
       {% comment %} <p class="fs-6 mb-0 mx-2" style="vertical-align: middle">{{ user }}님 안녕하세요. </p> {% endcomment %}
         <!-- Button trigger modal -->
         <button type="button" style="width: 70px; height: 70px; padding: 0;" class="btn btn-lg rounded-circle" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          {% if user.image %}
           <img class="rounded-circle" style="width: 100%; height: 100%; object-fit: cover;" src="{{ user.image.url }}" alt="Profile Image">
+          {% else %}
+
+          {% endif %}
         </button>
         <!-- Modal -->
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >

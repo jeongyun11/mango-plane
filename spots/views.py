@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Spot, Comment
 from .forms import SpotForm, CommentForm
+from django.contrib.auth import get_user_model
 
 
 def index(request):
@@ -79,7 +80,7 @@ def comment_create(request, spot_pk):
     if comment_form.is_valid():
         comment = comment_form.save(commit=False)
         comment.user = request.user
-        comment.spot = spot
+        comment.article_id = spot_pk
         comment.save()
 
     return redirect('spots:detail', spot.pk)

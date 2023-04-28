@@ -1,23 +1,41 @@
 {% extends "base.html" %}
 {% block content %}
-  <div>
-    <p>게시글 제목 -
-    {{spot.title}}
-    </p>
-    <hr>
-    <p>게시글 작성자 -
-      {{spot.user}}</p>
-    <p>
-    {% if spot.user == user %}
+
+<section class='container' style='max-width: 800px;'>
+  <div class='d-flex justify-content-between mt-3'>
+    <h3>{{spot.title}} <span style="color: #FF792A;">4.3</span></h3>
+    <div class='d-grid gap-2 d-md-flex justify-content-md-end'>
+      {% if spot.user == user %}
       <a href="{% url 'spots:update_spot' spot.pk %}" class="btn btn-primary me-2">
         <span>수정</span>
       </a>
-      <form action="{% url 'spots:delete' spot.pk %}" method="POST" class="d-inline-block">
-        {% csrf_token %}
-        <input type="submit" value="삭제" class="btn btn-danger">
-      </form>
-    {% else %}
+        <form action="{% url 'spots:delete' spot.pk %}" method="POST" class="d-inline-block">
+          {% csrf_token %}
+          <input type="submit" value="삭제" class="btn btn-danger">
+        </form>
+        <form action="{%url 'spots:likes' spot.pk %}" method="POST">
+          {% csrf_token %}
+          {% if request.user in spot.like_users.all %}
+            <input type="submit" value = "가고싶다 취소" class="btn btn-warning">
+            {% else %}
+            <input type="submit" value = "가고싶다" class="btn btn-warning">
+          {% endif %}
+        </form>
+      {% else %}
+      {% endif %}
+    </div>
+  </div>
+    <hr>
+    <p style="color: #959595;">주소: {{ spot.address }}</p>
+    <p style="color: #959595;">전화번호: {{ spot.phone_number }}</p>
+    <p style="color: #959595;">가격대: {{ spot.price_range }}</p>
+    <p style="color: #959595;">주차: {% if spot.parking %} 가능 {% else %} 불가능 {% endif %}</p>
+    <p style="color: #959595;">영업시간: {{ spot.business_hours }}</p>
+    <p style="color: #959595;">휴무일: {{ spot.holiday }}</p>
+    {% if spot.website %}
+      <p style="color: #959595;">웹사이트: <a href="{{ spot.website }}" style="color: black;">여행지 홈페이지로 가기</a></p>
     {% endif %}
+    {% comment %} <p>
     <hr>
     {% if spot.image %}
         <div class="mb-3">
@@ -26,55 +44,50 @@
     {% endif %}
     <p>
       {{spot.content}}
-    </p>
+    </p> {% endcomment %}
 
-    <form action="{%url 'spots:likes' spot.pk %}" method="POST">
+    <hr>
+    
+    
+    <form action="{% url 'spots:comment_create' spot.pk %}" method="post" enctype="multipart/form-data">
       {% csrf_token %}
-      {% if request.user in spot.like_users.all %}
-        <input type="submit" value = "가고싶다 취소">
-      {% else %}
-        <input type="submit" value = "가고싶다">
-      {% endif %}
-    </form>    
-  </div>
-  <hr>
-  <form action="{% url 'spots:comment_create' spot.pk %}" method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ comment_form.as_p }}
-    <input type="submit" value="추가리뷰 작성">
-  </form>
-  <hr>
-
-  {% for comment in comments %}
+      {{ comment_form.as_p }}
+      <input type="submit" value="추가리뷰 작성">
+    </form>
+    <hr>
+    
+    {% for comment in comments %}
     <div>
       <p>리뷰 작성자 -
         {{comment.user}}</p>
-      {% if comment.image %}
+        {% if comment.image %}
         <div class="mb-3">
           <img src="{{ comment.image.url }}" alt="{{comment.title}}">
         </div>
-      {% endif %}
-      <p>
-        리뷰 내용 -
-        {{comment.content}}
-      </p>
-
-      <form action="{%url 'spots:comment_likes' spot.pk comment.pk %}" method="POST">
-        {% csrf_token %}
-        {% if request.user in comment.like_users.all %}
-          <input type="submit" value = "좋아요 취소">
-        {% else %}
-          <input type="submit" value = "좋아요">
         {% endif %}
-      </form>
-
-      {% if comment.user == user %}
+        <p>
+          리뷰 내용 -
+          {{comment.content}}
+        </p>
+        
+        <form action="{%url 'spots:comment_likes' spot.pk comment.pk %}" method="POST">
+          {% csrf_token %}
+          {% if request.user in comment.like_users.all %}
+          <input type="submit" value = "좋아요 취소">
+          {% else %}
+          <input type="submit" value = "좋아요">
+          {% endif %}
+        </form>
+        
+        {% if comment.user == user %}
         <form action="{% url 'spots:comment_delete' spot.pk comment.pk %}" method="POST">
           {% csrf_token %}
           <input type="submit" value="댓글 삭제">
         </form>
-      {% endif %}
-    </div>
-    <hr>
-  {% endfor %}
-{% endblock content %}
+        {% endif %}
+      </div>
+      <hr>
+      {% endfor %}
+    </section>    
+      {% endblock content %}
+      

@@ -1,60 +1,82 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block style %}
-    a {
-      text-decoration: none; /* 밑줄 제거 */
-    }
-    .card {
-      border: none;
-      padding: 0px;
-    }
-    .card-text {
-      margin-bottom: 5px;
-      font-size: 15px;
-      font-weight: 200;
-      margin-bottom: 0px;
-    }
-    .card_title{
-      font-size: 23px;
-      font-weight: 600;
-      margin-top: 5px;
-      margin-bottom: 10px;
-    }
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+  a {
+    text-decoration: none; /* 밑줄 제거 */
   }
-  
-    header {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100vw;
-        height: 499px;
-        background-image: url(headerimg.jpg);
-        background-size: cover;
-        color: white;
-    }
-  
-    section {
-        margin-top: 30px;
-    }
-  
-    .category {
-        background-image: url(bestuser.jpeg);
-        background-size: cover;
-    }
-  
-    .bestReview {
-        background-image: url(bestuser.jpeg);
-        background-size: cover;
-    }
-  
-    .bestUser {
-        background-image: url(bestuser.jpeg);
-        background-size: cover;
-    }
+  .card {
+    border: none;
+    padding: 0px;
+  }
+  .card-text {
+    margin-bottom: 5px;
+    font-size: 15px;
+    font-weight: 200;
+    margin-bottom: 0px;
+  }
+  .card_title{
+    font-size: 23px;
+    font-weight: 600;
+    margin-top: 5px;
+    margin-bottom: 10px;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100vw;
+      height: 499px;
+      background-image: url('/static/headerimg.jpg');
+      background-size: cover;
+      color: white;
+  }
+
+  section {
+      margin-top: 30px;
+  }
+
+  .category {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-width: 350px;
+      min-height: 236px;
+      background-image: url('/static/category.jpeg');
+      background-size: cover;
+      color: white;
+      margin-top: 15px;
+  }
+
+  .bestReview {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-width: 350px;
+      min-height: 236px;
+      background-image: url('/static/bestreview.png');
+      background-size: cover;
+      color: white;
+      margin-top: 15px;
+  }
+
+  .bestUser {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-width: 350px;
+      min-height: 236px;
+      background-image: url('/static/bestuser.jpeg');
+      background-size: cover;
+      color: white;
+      margin-top: 15px;
+  }
   
     .setting {
         display: flex;
@@ -68,73 +90,70 @@
     }
 {% endblock style %}
 {% block content %}
-
-  <!--카드-->
-  <div class="container mt-4" >
-      <div class="row g-4">
-        {% for spot in spots %}
-            <div class="col-md-4">
-              <a href="{% url 'spots:detail' spot.pk %}">
-                <div class="card">
-                  {% if spot.image %}
-                    <img src="{{ spot.image.url }}" class="card-img-top rounded-2"  alt="image">
-                  {% else %}
-                    <img src="{% static 'No-Image-Placeholder.svg.png' %}" class="card-img-top" alt="image">
-                  {% endif %}
-                  <div class="card-body p-0">
-                    <p class="card-text">{{spot.title}}</p>
-                    <p class="card-text">작성자: {{spot.user}}</p> 
-                  </div>
-                </div>
-              </a>
-            </div>
-        {% empty %}
-        <p>아직 리뷰가 없어요.</p>
-        {% endfor %}
-      </div>
-  </div>
-
-  {% comment %} <div>
+  <div>
     <p>솔직한 리뷰, 믿을 수 있는 평점!</p>
     <h1>망고 플레인</h1>
     <form role="search">
       <input placeholder="Search" aria-label="Search">
       <button type="submit">Search</button>
     </form>
-</div>
-</header>
-<section>
+  </div>
+  </header>
+  <section>
 
-<div class="container text-center">
+  <div class="container text-center">
   <div class="row title">
     <h2>믿고 보는 여행지 리스트</h2>
     <a href="#">리스트 더보기</a>
   </div>
   <div class="row">
     <div class="col">
-      <img class="setting" src="{% static 'bestuser.jpeg' %}" alt="logo">
+      <div class="category setting">
         <p>카테고리별 추천 여행지</p>
         <p>"없는 컨셉은 없다. 이번 여행지는?"</p>
       </div>
     </div>
     <div class="col">
-      <div>
-        <img class="setting" src="{% static 'bestuser.jpeg' %}" alt="logo">
+      <div class="bestReview setting">
         <p>베스트 리뷰 20곳</p>
         <p>"모든 사용자가 극찬한 이곳!"</p>
       </div>
     </div>
     <div class="col">
-      <img class="setting" src="{% static 'bestuser.jpeg' %}" alt="logo">
+      <div class="bestUser setting">
         <p>사용자별 추천 여행지</p>
         <p>"한 달에 3회 이상, 여행러들의 선택~"</p>
       </div>
     </div>
-</div>
   </div>
-</section>
-<footer>
-이곳은 푸터입니다.
-</footer> {% endcomment %}
+  </div>
+  </section>
+  <footer>
+  이곳은 푸터입니다.
+  </footer>
+    <!--카드-->
+    <div class="container mt-4" >
+        <div class="row g-4">
+          {% for spot in spots %}
+              <div class="col-md-4">
+                <a href="{% url 'spots:detail' spot.pk %}">
+                  <div class="card">
+                    {% if spot.image %}
+                      <img src="{{ spot.image.url }}" class="card-img-top rounded-2"  alt="image">
+                    {% else %}
+                      <img src="{% static 'No-Image-Placeholder.svg.png' %}" class="card-img-top" alt="image">
+                    {% endif %}
+                    <div class="card-body p-0">
+                      <p class="card-text">{{spot.title}}</p>
+                      <p class="card-text">작성자: {{spot.user}}</p> 
+                    </div>
+                  </div>
+                </a>
+              </div>
+          {% empty %}
+          <p>아직 리뷰가 없어요.</p>
+          {% endfor %}
+        </div>
+    </div>
 {% endblock content %}
 

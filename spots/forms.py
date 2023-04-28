@@ -99,7 +99,20 @@ class SpotForm(forms.ModelForm):
 
 
 class CommentForm(forms.ModelForm):
+    content = forms.CharField(
+        label='',
+        widget=forms.Textarea(attrs={
+            'class': 'ReviewEditor__Editor',
+            'maxlength': '10000',
+            'style': 'overflow: hidden; overflow-wrap: break-word; width: 644px; height: 150px; border: 1px solid #DBDBDB;',
+        }),
+    )
+
     class Meta:
         model = Comment
         fields = ('content', 'image')
-        widgets = {'content': forms.TextInput}
+
+    def __init__(self, *args, **kwargs):
+        spot = kwargs.pop('spot') # spot 인자를 받아옵니다.
+        super().__init__(*args, **kwargs)
+        self.fields['content'].widget.attrs['placeholder'] = f"{spot.user}님, 이번 여행은 어떠셨나요? 여행지의 분위기와 후기가 궁금해요!"

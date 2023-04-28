@@ -31,3 +31,9 @@ class Comment(models.Model):
     article = models.ForeignKey(Spot, on_delete=models.CASCADE)
     content = models.TextField(null=False)
     image   = models.ImageField(upload_to='tourlist_destinations/', null=True, blank=True)
+    
+    
+class Emote(models.Model):
+    spot = models.ForeignKey(Spot, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    emotion = models.CharField(max_length=10)

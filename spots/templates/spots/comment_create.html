@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block style %}
+
+.EmoticonPicker__Label {
+  color: #888888;
+}
+.EmoticonPicker__Icon {
+  font-size: 36px;
+  margin: 8px;
+  color: #888888;
+}
+.form-check-input {
+  display: none;
+}
+
+.ReviewEditor__Editor__Wrap {
+    border: 1px solid #DBDBDB;
+    border-radius: 3px;
+    box-sizing: border-box;
+    padding: 16px;
+}
+
+.box2 {
+  margin-right: 10px;
+}
+
+
+{% endblock style %}
+
+{% block content %}
+<!-- 이모티콘 link -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+
+
+<!-- 제목 -->
+<section class='container mt-5 ReviewEditor__Editor__Wrap' style='max-width: 800px;'>
+  <p style="white-space: nowrap; display: inline-block; margin-right: 5px; font-size: 28px; color: #FF792A;" >{{ spot.title }}에 대한</p><p style="display: inline-block; font-size: 16px;">솔직한 리뷰를 작성해주세요.</p>
+  
+
+  <!-- 이모티콘 -->
+  <div class="form-group">
+    {% for emotion in emotions %}
+      <div class="form-check d-inline-block mx-2">
+        <input class="form-check-input" type="radio" name="emotion" id="emotion{{ emotion.value }}" value="{{ emotion.value }}">
+        <label class="form-check-label" for="emotion{{ emotion.value }}">
+          {% if emotion.value == 1 %}
+          <i class="far fa-laugh-squint EmoticonPicker__Icon EmoticonPicker__Icon--Positive" id="emotion-icon{{ emotion.value }}"></i>
+          {% elif emotion.value == 2 %}
+            <i class="far fa-meh EmoticonPicker__Icon EmoticonPicker__Icon--Neutral" id="emotion-icon{{ emotion.value }}"></i>
+          {% elif emotion.value == 3 %}
+            <i class="far fa-frown EmoticonPicker__Icon EmoticonPicker__Icon--Negative" id="emotion-icon{{ emotion.value }}"></i>
+          {% endif %}
+          <span class="ml-2 EmoticonPicker__Label EmoticonPicker__Label--{{ emotion.value }}">{{ emotion.label }}</span>
+        </label>
+      </div>
+    {% endfor %}
+  </div>
+  <!-- 이모티콘 js -->
+  <script>
+    // 이모티콘 클릭 시 라디오 버튼 체크하기
+    const emoticons = document.querySelectorAll('.form-check-input');
+    emoticons.forEach(emoticon => {
+      emoticon.addEventListener('click', () => {
+        emoticons.forEach(other => {
+          other.checked = false;
+          const label = document.querySelector(`.EmoticonPicker__Label--${other.value}`);
+          if (label) {
+            label.style.color = '#888888'; // 다른 라디오 버튼은 회색으로 변경
+          }
+          const emoticonIcon = document.querySelector(`#emotion-icon${other.value}`);
+          if (emoticonIcon) {
+            emoticonIcon.style.color = '#888888'; // 다른 이모티콘 색상은 회색으로 변경
+          }
+        });
+        emoticon.checked = true;
+        const emoticonIcon = document.querySelector(`#emotion-icon${emoticon.value}`);
+        const label = document.querySelector(`.EmoticonPicker__Label--${emoticon.value}`);
+        if (label) {
+          label.style.color = '#FF792A'; // 선택한 라디오 버튼은 주황색으로 변경
+        }
+        if (emoticonIcon) {
+          emoticonIcon.style.color = '#FF792A'; // 선택한 이모티콘 색상은 주황색으로 변경
+        }
+      });
+    });
+  </script>
+  
+  
+  <!-- 댓글 작성 폼 -->
+  <form method="POST" enctype="multipart/form-data" class="mx-auto">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div style="display: flex; justify-content: flex-end;">
+      <button type="reset" class="btn btn-secondary box2">취소하기</button>
+      <button type="submit" class="btn btn-primary box2">작성하기</button>
+    </div>
+  </form>
+</section>
+{% endblock %}

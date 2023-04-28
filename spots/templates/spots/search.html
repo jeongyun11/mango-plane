@@ -4,18 +4,58 @@
   a {
     text-decoration: none;
   }
+
+  .search {
+    background-color: white;
+    border-radius: 50px;
+    border-color: orange;
+    border-style: solid;
+    width: 400px;
+    height: 50px;
+}
+
+.search-label {
+    color: gray;
+}
+.search-input__text {
+    border-style: none;
+    outline: none;
+    height: 100%;
+    border-radius: 50px;
+}
+
+.search-input__text::placeholder {
+  color: lightgray;
+}
+
+.search-input__submit {
+    border-radius: 50px;
+    border-style: none;
+    background-color: orange;
+    color: white;
+    width: 100px;
+    height: 100%;
+}
+
+.search-result {
+  color: orange;
+}
 {% endblock style %}
 
 {% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
 
+<div class="container text-center my-5">
+  <form action="{% url 'spots:search' %}" class="search">
+    <label class="search-label" for="keyword">
+      <i class="fas fa-search search-label__icon" style="color: #d4d4d4;"></i>
+    </label>
+    <input class="search-input__text" placeholder="여행지" name="keyword" id="keyword">
+    <input class="search-input__submit" type="submit" value="검색">
+  </form>
+</div>
 
-<form action="{% url 'spots:search' %}">
-  <label for="keyword">검색어</label>
-  <input type="text" name="keyword" id="keyword">
-  <input type="submit" value="검색">
-</form>
-
-<h1>{{ keyword }}의 검색결과</h1>
+<h2 class="search-result">{{ keyword }}의 검색결과</h2>
   <div class="d-inline-flex row w-50 justify-content-center ">
     {% for spot in spots %}
       <div class="col-md-6" >

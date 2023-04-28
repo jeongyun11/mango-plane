@@ -79,7 +79,7 @@ def comment_create(request, spot_pk):
     if comment_form.is_valid():
         comment = comment_form.save(commit=False)
         comment.user = request.user
-        comment.spot = spot
+        comment.article_id = spot_pk
         comment.save()
 
     return redirect('spots:detail', spot.pk)

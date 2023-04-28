@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.core.validators import RegexValidator
 
 
 class Spot(models.Model):
@@ -15,6 +16,13 @@ class Spot(models.Model):
     content = models.TextField(null=False)
     image   = models.ImageField(upload_to='tourlist_destinations/', null=True, blank=True)
     category   = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
+    address = models.CharField(max_length=100)
+    phone_number = models.CharField(max_length=20)
+    price_range = models.CharField(max_length=20)
+    parking = models.BooleanField(default=False)
+    business_hours = models.CharField(max_length=50)
+    holiday =  models.DateField()
+    website = models.URLField(max_length=200, null=True, blank=True)
 
 
 class Comment(models.Model):

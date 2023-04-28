@@ -66,6 +66,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'spots.context_processors.liked_spots',
+                'spots.context_processors.recently_viewed',
             ],
         },
     },

@@ -111,3 +111,12 @@ def comment_likes(request, spot_pk, comment_pk):
     else:
         comment.like_users.add(request.user)
     return redirect('spots:detail', spot_pk)
+
+def search(request):
+    keyword = request.GET.get('keyword')
+    spots = Spot.objects.filter(title__contains = keyword) # SELECT ... FROM ... LIKE '%<keyword>%'
+    context = {
+        'spots': spots,
+        'keyword': keyword,
+    }
+    return render(request, 'spots/search.html', context)

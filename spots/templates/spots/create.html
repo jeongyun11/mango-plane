@@ -1,9 +1,37 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+
+{% block style %}
+  <style>
+    .wid {
+      width: 500px;
+    }
+
+    p {
+      display: grid;
+      grid-template-columns: 1fr auto;
+    }
+
+    p span {
+      grid-column: 1 / -1;
+    }
+  </style>
+{% endblock style %}
+
 {% block content %}
-  <h3>CREATE</h3>
-  <form action="{% url 'spots:create' %}" method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="글 작성"></input>
+<div class="wid">
+  <form action="{% url 'spots:create' %}" method="POST" enctype="multipart/form-data" style="width: 500px" class="mx-auto m-5 mb-3">
+    <h3>CREATE</h3>
+    <div class='mt-5 mb-4'>
+      {% csrf_token %}
+      {% for field in form %}
+      <div class='d-flex align-items-center'>
+        <div class='col-3'>{{ field.label }}</div>
+        <div class='col-9'>{{ field }}</div>
+      </div>
+      <hr>
+      {% endfor %}
+      <button class="btn btn-outline-secondary d-block w-100 mt-4" type="submit">글 작성</button>
+    </div>
   </form>
+</div>
 {% endblock content %}

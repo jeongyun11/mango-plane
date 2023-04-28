@@ -110,46 +110,50 @@
     width: 400px;
     height: 50px;
 
-}
+  }
 
-.search-label {
-    color: gray;
-}
+  .search-label {
+      color: gray;
+  }
 
-.search-input__text {
-    border-style: none;
-    outline: none;
-    height: 100%;
-    border-radius: 50px;
-}
+  .search-input__text {
+      border-style: none;
+      outline: none;
+      height: 100%;
+      border-radius: 50px;
+  }
 
-.search-input__text::placeholder {
-  color: lightgray;
-}
+  .search-input__text::placeholder {
+    color: lightgray;
+    font-size: 20px;
+  }
 
-.search-input__submit {
-    border-radius: 50px;
-    border-style: none;
-    background-color: orange;
-    color: white;
-    width: 100px;
-    height: 100%;
-}
+  .search-input__submit {
+      border-radius: 50px;
+      border-style: none;
+      background-color: orange;
+      color: white;
+      width: 100px;
+      height: 100%;
+  }
+
+  .search-label__icon {
+    font-size: 24px;
+  }
 
 {% endblock style %}
 {% block content %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
 
   <header>
-    <div class="text-center">
-      <p>솔직한 리뷰, 믿을 수 있는 평점!</p>
-      <h1>망고 플레인</h1>
-      <form action="{% url 'spots:search' %}" class="search">
-        <label class="search-label" for="keyword">
-          <i class="fas fa-search search-label__icon" style="color: #d4d4d4;"></i>
+    <div class="text-center" >
+      <p style="margin-bottom: 0px; font-size: 35px">솔직한 리뷰, 믿을 수 있는 평점!</p>
+      <h1 style="margin-bottom: 30px;">망고 플레인</h1 >
+      <form action="{% url 'spots:search' %}" class="search" style="display: flex; align-items: center; width: 742px;">
+          <i class="fas fa-search search-label__icon ms-5" style="color: #d4d4d4;"></i>
         </label>
-        <input class="search-input__text" placeholder="여행지" name="keyword" id="keyword">
-        <input class="search-input__submit" type="submit" value="검색">
+        <input class="search-input__text ms-3" placeholder="여행지" name="keyword" id="keyword" style="flex: 1;">
+        <input class="search-input__submit" type="submit" value="검색" style="width: 100px;">
       </form>
     </div>
   </header>

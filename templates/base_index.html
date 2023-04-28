@@ -58,6 +58,13 @@
           <!-- 탭 컨텐츠 -->
           <div id="tab1" class="tab-content" style="display: block">
             <p>최근 본 맛집 탭</p>
+            {% if recently_viewed_spots %}
+            <ul>
+              {% for recent_spot in recently_viewed_spots %}
+                <li><a href="{% url 'spots:detail' spot_pk=recent_spot.pk %}">{{ recent_spot.title }}</a></li>
+              {% endfor %}
+            </ul>
+          {% endif %}
           </div>
           <div id="tab2" class="tab-content">
             {% if liked_spots %}

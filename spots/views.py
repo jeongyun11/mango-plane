@@ -1,6 +1,6 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .models import Spot, Comment
+from .models import Spot, Comment, Emote
 from .forms import SpotForm, CommentForm
 from django.contrib.auth import get_user_model
 
@@ -16,13 +16,23 @@ def index(request):
 def detail(request, spot_pk):
     spot = Spot.objects.get(pk=spot_pk)
     comments = spot.comment_set.all()
-    comment_form = CommentForm()
+    if request.method == 'POST':
+        comment_form = CommentForm(request.POST, request.FILES, spot=spot)
+        if comment_form.is_valid():
+            comment = comment_form.save(commit=False)
+            comment.user = request.user
+            comment.spot = spot
+            comment.save()
+            return redirect('spots:detail', spot_pk=spot.pk)
+    else:
+        comment_form = CommentForm(spot=spot)
     context = {
         'spot': spot,
         'comments': comments,
         'comment_form': comment_form,
     }
     return render(request, 'spots/detail.html', context)
+
 
 
 @login_required
@@ -75,15 +85,23 @@ def delete(request, pk):
 
 @login_required
 def comment_create(request, spot_pk):
-    spot = Spot.objects.get(pk=spot_pk)
-    comment_form = CommentForm(request.POST, request.FILES)
-    if comment_form.is_valid():
-        comment = comment_form.save(commit=False)
-        comment.user = request.user
-        comment.article_id = spot_pk
-        comment.save()
-
-    return redirect('spots:detail', spot.pk)
+    spot = get_object_or_404(Spot, pk=spot_pk)
+    emotions = [
+        {'label': '좋았다', 'value': 1},
+        {'label': '괜찮다', 'value': 2},
+        {'label': '별로', 'value': 3},
+    ]
+    if request.method == 'POST':
+        form = CommentForm(request.POST, request.FILES, spot=spot)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.article = spot
+            comment.user = request.user
+            comment.save()
+            return redirect('spots:detail', spot_pk=spot.pk)
+    else:
+        form = CommentForm(spot=spot)
+    return render(request, 'spots/comment_create.html', {'form': form, 'spot': spot, 'emotions': emotions})
 
 
 @login_required
@@ -121,3 +139,19 @@ def search(request):
         'keyword': keyword,
     }
     return render(request, 'spots/search.html', context)
+
+
+@login_required
+def emotes(request, spot_pk, emotion):
+    spot = Spot.objects.get(pk=spot_pk)
+    filter_query = Emote.objects.filter(
+        spot=spot,
+        user=request.user,
+        emotion=emotion,
+    )
+    if filter_query.exists():
+        filter_query.delete()
+    else:
+        Emote.objects.create(spot=spot, user=request.user, emotion=emotion)
+
+    return redirect('spots:detail', spot_pk)

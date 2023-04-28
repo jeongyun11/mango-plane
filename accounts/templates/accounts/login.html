@@ -1,11 +1,42 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block style %}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.container {
+  margin-top: 5%;
+  text-align: center;
+}
+
+.login {
+  margin-top: 50px;
+}
+
+.loginButton {
+  width: 400px;
+  background-color: lightgray;
+  border: 1px solid lightgray;
+  border-radius: 15px;
+  margin-top: 30px;
+  padding: 10px;
+}
+
+{% endblock style %}
+
 {% block content %}
-  <div>
-    <h1>로그인</h1>
-    <form action="{% url 'accounts:login' %}" method="POST">
+  <div class="container">
+    <h1>망고 플레인</h1>
+    <p>로그인하면 가고 싶은 식당을 저장할 수 있어요!</p>
+    <form class="login" action="{% url 'accounts:login' %}" method="POST">
       {% csrf_token %}
       {{ form.as_p }}
-      <input type="submit" value="로그인">
+      <input class="loginButton" type="submit" value="로그인">
     </form>
   </div>
 {% endblock content %}

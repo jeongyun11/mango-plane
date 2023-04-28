@@ -31,7 +31,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 100vw;
+      width: 100%;
       height: 499px;
       background-image: url('/static/headerimg.jpg');
       background-size: cover;
@@ -90,18 +90,18 @@
     }
 {% endblock style %}
 {% block content %}
-  <div>
-    <p>솔직한 리뷰, 믿을 수 있는 평점!</p>
-    <h1>망고 플레인</h1>
-    <form role="search">
-      <input placeholder="Search" aria-label="Search">
-      <button type="submit">Search</button>
-    </form>
-  </div>
-  </header>
   <section>
-
   <div class="container text-center">
+    <header>
+      <div>
+        <p>솔직한 리뷰, 믿을 수 있는 평점!</p>
+        <h1>망고 플레인</h1>
+        <form role="search">
+          <input placeholder="Search" aria-label="Search">
+          <button type="submit">Search</button>
+        </form>
+      </div>
+    </header>
   <div class="row title">
     <h2>믿고 보는 여행지 리스트</h2>
     <a href="#">리스트 더보기</a>

@@ -18,5 +18,5 @@ urlpatterns = [
     path('<int:spot_pk>/likes/',views.likes, name='likes'),
     path('<int:spot_pk>/comments/<int:comment_pk>/likes/',views.comment_likes, name = 'comment_likes'),
     path('search/', views.search, name='search'),
-    path('int:spot_pk/emotes/int:emotion/', views.emotes, name='emotes'),
+    path('<int:spot_pk>/emotes/<int:emotion>/', views.emotes, name='emotes'),
     ]

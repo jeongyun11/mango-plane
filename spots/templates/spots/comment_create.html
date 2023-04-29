@@ -39,7 +39,56 @@
   
 
   <!-- 이모티콘 -->
-  <div class="form-group">
+  <div style="display: flex;">
+    {% for emotion in emotions %}
+    <span>
+      {% if request.user.is_authenticated %}
+      {{emotion.queryset}}
+      <form action="{% url 'spots:emotes' spot.pk emotion.value %}" method="POST" class="emote-form">
+        {% csrf_token %}
+        {% if emotion.exist %}
+        <div class="d-inline-block mx-2">
+        <i type="submit" class="far fa-laugh-squint EmoticonPicker__Icon EmoticonPicker__Icon--Positive" id="emotion-icon{{ emotion.value }} 취소"></i>
+        {{ emotion.label }}
+        </div>
+        {% else %}
+        <div class="d-inline-block mx-2"> 
+          <i type="submit" class="far fa-laugh-squint EmoticonPicker__Icon EmoticonPicker__Icon--Positive" id="emotion-icon{{ emotion.value }}"></i>
+        {{ emotion.label }}
+        </div>
+        {% endif %}
+      </form>
+      {% else %}
+      <button disabled="disabled">{{emotion.label}}</button>
+      {% endif %}
+    </span>
+    {% endfor %}
+  </div>
+  
+  <script>
+    const emoteForms = document.querySelectorAll('.emote-form');
+    emoteForms.forEach(form => {
+      form.addEventListener('submit', (event) => {
+        event.preventDefault(); // 기본 submit 동작 막기
+        const xhr = new XMLHttpRequest(); // Ajax 요청을 보내기 위한 객체 생성
+        xhr.open('POST', form.action, true); // POST 방식으로 요청 보내기
+        xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}'); // CSRF 토큰 설정
+        xhr.onreadystatechange = function () { // 응답 상태 변경 이벤트 리스너
+          if (xhr.readyState === 4 && xhr.status === 200) { // 요청이 완료되고 성공적으로 처리됨
+            // 이모티콘 취소/선택 버튼 업데이트
+            const submitButton = form.querySelector('input[type=submit]');
+            if (submitButton.value.endsWith('취소')) {
+              submitButton.value = submitButton.value.slice(0, -3);
+            } else {
+              submitButton.value += ' 취소';
+            }
+          }
+        };
+        xhr.send(new FormData(form)); // 요청 보내기
+      });
+    });
+  </script>
+  {% comment %} <div class="form-group">
     {% for emotion in emotions %}
       <div class="form-check d-inline-block mx-2">
         <input class="form-check-input" type="radio" name="emotion" id="emotion{{ emotion.value }}" value="{{ emotion.value }}">
@@ -55,9 +104,9 @@
         </label>
       </div>
     {% endfor %}
-  </div>
+  </div> {% endcomment %}
   <!-- 이모티콘 js -->
-  <script>
+  {% comment %} <script>
     // 이모티콘 클릭 시 라디오 버튼 체크하기
     const emoticons = document.querySelectorAll('.form-check-input');
     emoticons.forEach(emoticon => {
@@ -84,7 +133,7 @@
         }
       });
     });
-  </script>
+  </script> {% endcomment %}
   
   
   <!-- 댓글 작성 폼 -->

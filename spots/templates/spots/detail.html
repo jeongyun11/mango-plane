@@ -48,7 +48,14 @@
     </p> {% endcomment %}
     
     <hr>
-    
+
+    {% for emotion in emotions %}
+    <div>
+      {{ emotion.label }}: {{ emotion.count }}
+    </div>
+    {% endfor %}
+
+
     {% for comment in comments %}
     <div>
       <p>리뷰 작성자 -

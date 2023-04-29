@@ -2,6 +2,38 @@
 
 {% block style %}
 
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.contentBox {
+  display: flex;
+  flex-direction: column;
+  width: 680px;
+  margin: 0 auto;
+  margin-top: 30px;
+}
+
+.emoticonBox {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #DBDBDB;
+  padding: 10px;
+}
+
+.emoticon {
+  display: flex;
+  flex-direction: row;
+}
+
+.reviewBox {
+  overflow: hidden;
+  overflow-wrap: break-word;
+  height: 240px;
+}
+
 .EmoticonPicker__Label {
   color: #888888;
 }
@@ -14,17 +46,58 @@
   display: none;
 }
 
-.ReviewEditor__Editor__Wrap {
-    border: 1px solid #DBDBDB;
-    border-radius: 3px;
-    box-sizing: border-box;
-    padding: 16px;
+.buttonBox {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 30px;
 }
 
-.box2 {
-  margin-right: 10px;
+.resetButton {
+  min-width: 140px;
+  min-height: 50px;
+  margin-right: 16px;
+  padding-left: 14px;
+  padding-right: 14px;
+  border: 1px solid #7F7F7F;
+  border-radius: 50px;
+  font-size: 16px;
+  color: #7F7F7F;
+  text-align: center;
+  background-color: #FFFFFF;
 }
 
+.submitButton {
+  min-width: 140px;
+  min-height: 50px;
+  padding-left: 14px;
+  padding-right: 14px;
+  border: 1px solid #E9E9E9;
+  border-radius: 50px;
+  font-size: 16px;
+  color: #FFFFFF;
+  text-align: center;
+  background-color: #E9E9E9;
+}
+{% comment %} 제출하기 버튼 활성화 오렌지 색 #ff7100; {% endcomment %}
+
+.titleBox {
+  display: flex;
+  align-items: baseline;
+}
+
+.spotTitle {
+  white-space: nowrap;
+  display: inline-block;
+  margin-right: 5px;
+  font-size: 28px;
+  color: #FF792A;
+}
+
+.spotSubtitle {
+  display: inline-block;
+  font-size: 16px;
+  color: #7F7F7F;
+}
 
 {% endblock style %}
 
@@ -32,37 +105,44 @@
 <!-- 이모티콘 link -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
 
-
-<!-- 제목 -->
-<section class='container mt-5 ReviewEditor__Editor__Wrap' style='max-width: 800px;'>
-  <p style="white-space: nowrap; display: inline-block; margin-right: 5px; font-size: 28px; color: #FF792A;" >{{ spot.title }}에 대한</p><p style="display: inline-block; font-size: 16px;">솔직한 리뷰를 작성해주세요.</p>
-  
+<section class='contentBox'>
+  <!-- 제목 -->
+  <div class="titleBox">
+    <p class="spotTitle">{{ spot.title }}에 대한</p><p class="spotSubtitle">솔직한 리뷰를 작성해주세요.</p>
+  </div>
 
   <!-- 이모티콘 -->
-  <div style="display: flex;">
-    {% for emotion in emotions %}
-    <span>
-      {% if request.user.is_authenticated %}
-      {{emotion.queryset}}
-      <form action="{% url 'spots:emotes' spot.pk emotion.value %}" method="POST" class="emote-form">
-        {% csrf_token %}
-        {% if emotion.exist %}
-        <div class="d-inline-block mx-2">
-        <i type="submit" class="far fa-laugh-squint EmoticonPicker__Icon EmoticonPicker__Icon--Positive" id="emotion-icon{{ emotion.value }} 취소"></i>
-        {{ emotion.label }}
-        </div>
+  <div class="emoticonBox">
+    <div class="emoticon">
+      {% for emotion in emotions %}
+      <span>
+        {% if request.user.is_authenticated %}
+        {{emotion.queryset}}
+        <form action="{% url 'spots:emotes' spot.pk emotion.value %}" method="POST" class="emote-form">
+          {% csrf_token %}
+          {% if emotion.exist %}
+          <div class="d-inline-block mx-2">
+          <i type="submit" class="far fa-laugh-squint EmoticonPicker__Icon EmoticonPicker__Icon--Positive" id="emotion-icon{{ emotion.value }} 취소"></i>
+          {{ emotion.label }}
+          </div>
+          {% else %}
+          <div class="d-inline-block mx-2"> 
+            <i type="submit" class="far fa-laugh-squint EmoticonPicker__Icon EmoticonPicker__Icon--Positive" id="emotion-icon{{ emotion.value }}"></i>
+          {{ emotion.label }}
+          </div>
+          {% endif %}
+        </form>
         {% else %}
-        <div class="d-inline-block mx-2"> 
-          <i type="submit" class="far fa-laugh-squint EmoticonPicker__Icon EmoticonPicker__Icon--Positive" id="emotion-icon{{ emotion.value }}"></i>
-        {{ emotion.label }}
-        </div>
+        <button disabled="disabled">{{emotion.label}}</button>
         {% endif %}
-      </form>
-      {% else %}
-      <button disabled="disabled">{{emotion.label}}</button>
-      {% endif %}
-    </span>
-    {% endfor %}
+      </span>
+      {% endfor %}
+    </div>
+    <!-- 댓글 작성 폼 -->
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.as_p }}
+    </form>
   </div>
   
   <script>
@@ -136,14 +216,10 @@
   </script> {% endcomment %}
   
   
-  <!-- 댓글 작성 폼 -->
-  <form method="POST" enctype="multipart/form-data" class="mx-auto">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <div style="display: flex; justify-content: flex-end;">
-      <button type="reset" class="btn btn-secondary box2">취소하기</button>
-      <button type="submit" class="btn btn-primary box2">작성하기</button>
-    </div>
-  </form>
+
+  <div class="buttonBox">
+    <button type="reset" class="resetButton">취소하기</button>
+    <button type="submit" class="submitButton">작성하기</button>
+  </div>
 </section>
 {% endblock %}

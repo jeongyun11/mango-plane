@@ -23,6 +23,7 @@ EMOTIONS = [
 def detail(request, spot_pk):
     spot = Spot.objects.get(pk=spot_pk)
     comments = spot.comment_set.all()
+    comment_count = comments.count()
     emotions = []
     for emotion in EMOTIONS:
         label = emotion['label']
@@ -44,6 +45,7 @@ def detail(request, spot_pk):
         'comments': comments,
         'comment_form': comment_form,
         'emotions': emotions,
+        'comment_count': comment_count,
     }
     return render(request, 'spots/detail.html', context)
 

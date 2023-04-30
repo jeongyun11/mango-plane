@@ -122,12 +122,12 @@
           {% csrf_token %}
           {% if emotion.exist %}
           <div class="d-inline-block mx-2">
-          <i type="submit" class="far fa-laugh-squint EmoticonPicker__Icon EmoticonPicker__Icon--Positive" id="emotion-icon{{ emotion.value }} 취소"></i>
+          <input type="submit" value="{{emotion.label}} 취소">
           {{ emotion.label }}
           </div>
           {% else %}
           <div class="d-inline-block mx-2"> 
-            <i type="submit" class="far fa-laugh-squint EmoticonPicker__Icon EmoticonPicker__Icon--Positive" id="emotion-icon{{ emotion.value }}"></i>
+          <input type="submit" value="{{emotion.label}}">
           {{ emotion.label }}
           </div>
           {% endif %}

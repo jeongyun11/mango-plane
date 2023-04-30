@@ -49,11 +49,15 @@
     
     <hr>
 
-    {% for emotion in emotions %}
-    <div>
-      {{ emotion.label }}: {{ emotion.count }}
-    </div>
-    {% endfor %}
+    <p style="display: flex; justify-content: space-between; align-items: center;">리뷰 ({{ comment_count }}) 
+      <span style="margin-left: auto;">
+        전체 ({{ comment_count }}) |
+        {% for emotion in emotions %} 
+        {{ emotion.label }}({{ emotion.count }}) 
+        {% if not forloop.last %}| {% endif %}
+        {% endfor %}
+      </span>
+    </p>
 
 
     {% for comment in comments %}

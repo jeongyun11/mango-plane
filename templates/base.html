@@ -19,17 +19,156 @@
     .tab-content {
       display: none;
     }
+    .nav {
+      position : fixed;
+      top: 0;
+      left: 0;
+      width:100%;
+      background-color: rgba(0, 0, 0, 0);
+      z-index: 999;
+    }
+    .nav-link{
+      color: white;
+    }
+
+
+    .modal-backdrop  {
+      z-index: 999;
+    }
+
+    .modal-content {
+      z-index: 1051;
+      height: 550px;
+      width: 320px;
+      border-radius: 0;
+    }
+
+    .modal-header{
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-dialog {
+      position: fixed;
+      top: 8%;
+      right: 0;
+      margin-left: auto;
+      z-index: 1051;
+    }
+
+    .modal-header button {
+      margin: 0;
+      padding: 0;
+      border: none;
+      background-color: white;
+    }
     
+    .modal-header button:focus {
+      color: orange;
+      border-bottom: 2px solid orange;
+    }
+
 
   {%block style%}
   {%endblock style%}
   </style>
 </head>
 <body>
-  <nav class="navbar navbar-expand bg-body border-bottom">
-    <div class="d-flex container">
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style = "z-index:2000" >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button style = "width : 50%; height : 50px; color : #9b9b9b;" onclick="openTab(event, 'tab1')" id = "defaultOpen">최근 본 맛집</button>
+          <button style = "width : 50%; height : 50px; color : #9b9b9b; " onclick="openTab(event, 'tab2')">가고싶다</button>
+        </div>
+        <div class="modal-body">
+          <!-- 탭 컨텐츠 -->
+          <div id="tab1" class="tab-content" style="display: block">
+            {% if recently_viewed_spots %}
+              {% for spot in recently_viewed_spots %}
+                <a href="{% url 'spots:detail' spot.pk %}">
+                  <div class="d-flex align-items-center mb-4">
+                    <img src="{% if spot.image %}{{ spot.image.url }}{% endif %}" style="width: 70px; height: 70px; margin-right: 10px " alt="{{ spot.title }}">
+                    <p class="ml-5">{{ spot.title }}</p>
+                  </div>
+                </a>
+              {% endfor %}
+            {% else %}
+            <div class = "d-flex flex-column justify-content-center align-items-center">
+              <div style = "height : 140px;"></div>
+              <p class = "text-center" style = "font-size: 22px;">거기가 어디였지?</p>
+              <p class="text-center" style="color: #ff792a; font-size: 14px;">내가 둘러 본 식당이 이 곳에 순서대로 <br>기록됩니다.</p>
+            </div>
+            {% endif %}
+          </div>
+          <div id="tab2" class="tab-content">
+            {% if liked_spots %}
+                {% for spot in liked_spots %}
+                <a href="{% url 'spots:detail' spot.pk %}">
+                  <div class="d-flex align-items-center mb-4">
+                    <img src="{% if spot.image %}{{ spot.image.url }}{% endif %}" style="width: 70px; height: 70px; margin-right: 10px " alt="{{ spot.title }}">
+                    <p class="ml-5">{{ spot.title }}</p>
+                  </div>
+                </a>
+                {% endfor %}
+            {% else %}
+            <div class = "d-flex flex-column justify-content-center align-items-center">
+              <div style = "height : 140px;"></div>
+              <p class = "text-center"  style = "font-size: 23px;">격하게 가고싶다..</p>
+              <p class="text-center" style="color: #ff792a; font-size: 17px;">식당의 '별' 아이콘을 누르면 가고싶은 곳을 쉽게 저장할 수 있습니다.</p>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+        <div class="modal-footer" style = "padding : 0;">
+          <button class="btn" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal">내정보</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="exampleModalToggle2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1" style = "z-index:2000 top: 100px; left: 0%;">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header text-center">
+          <p class="modal-title fs-5 " style = "height : 50px;" id="exampleModalToggleLabel2">내정보</p>
+        </div>
+        <div class="modal-body">
+          <div class = "container text-center">
+            <div style = "display: inline-block;">
+            <div class="card" class = "mx-auto" style = "width : 200px;">
+              {% if request.user.image %}
+                <img src="{{ request.user.image.url }}" class="card-img-top rounded-circle mx-auto mt-4" style = "width: 70px;" alt="image">
+              {% else %}
+                <img src="{% static 'not-found-user.png' %}" class="card-img-top rounded-circle mx-auto mt-4" alt="image">
+              {% endif %}
+              <div class="card-body mal">
+                {% comment %} <h4 class="card-text card_title">{{ request.user }}</h4> {% endcomment %}
+                <p class="card-text">{{spot.title}}</p>
+                <p class="card-text">이름: {{ request.user.last_name }}{{ request.user.first_name }}</p> 
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer d-flex justify-content-evenly" >
+          <form action="{% url 'accounts:delete' %}" method="POST">
+            {% csrf_token %}
+            <input type="submit" class="btn" value="회원탈퇴">
+          </form>
+          <a class="btn" href="{% url 'accounts:logout' %}" role="button">로그아웃</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+  <nav class="navbar navbar-expand nav">
+    <div class="d-flex container-fluid" >
       <a class="me-auto navbar-brand" href="{% url 'spots:index' %}">
-        <img src="{% static 'logo3.png' %}" alt="logo" width="151">
+        <img src="{% static 'logo3.png' %}" alt="logo" width="100">
       </a>
       {% comment %} <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -37,126 +176,84 @@
       <div class="ms-3" id="navbarNav">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'spots:index' %}">Home</a>
+            <a class="nav-link me-5" href="{% url 'spots:index' %}">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'spots:create' %}">작성하기</a>
+            <a class="nav-link me-5" href="{% url 'spots:create' %}">작성하기</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'accounts:profile' %}">Profile</a>
+            <a class="nav-link me-5" href="{% url 'accounts:profile' %}">Profile</a>
           </li>
         </ul>
       </div>
       {% if request.user.is_authenticated %}
       {% comment %} <p class="fs-6 mb-0 mx-2" style="vertical-align: middle">{{ user }}님 안녕하세요. </p> {% endcomment %}
         <!-- Button trigger modal -->
-        <button type="button" style="width: 70px; height: 70px; padding: 0;" class="btn btn-lg rounded-circle" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        <button type="button" style="width: 50px; height: 50px; padding: 0; border-color: orange; border-width: 3px; box-sizing: border-box;" class="btn btn-lg rounded-circle me-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
           {% if user.image %}
-          <img class="rounded-circle" style="width: 100%; height: 100%; object-fit: cover;" src="{{ user.image.url }}" alt="Profile Image">
+          <img class="rounded-circle" style="width: 100%; height: 100%; object-fit: cover; display: block; margin: auto;" src="{{ user.image.url }}" alt="Profile Image">
           {% else %}
-          <img class="rounded-circle" style="width: 100%; height: 100%; object-fit: cover;" src="{% static 'not-found-user.png' %}" alt="Profile Image">
+          <img class="rounded-circle" style="width: 100%; height: 100%; object-fit: cover; display: block; margin: auto;" src="{% static 'not-found-user.png' %}" alt="Profile Image">
           {% endif %}
         </button>
-        <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button style = "width : 50%" onclick="openTab(event, 'tab1')">최근 본 맛집</button>
-                <button style = "width : 50%" onclick="openTab(event, 'tab2')">가고싶다</button>
-              </div>
-              <div class="modal-body">
-                <!-- 탭 컨텐츠 -->
-                <div id="tab1" class="tab-content" style="display: block">
-                  <p>최근 본 맛집 탭</p>
-                </div>
-                <div id="tab2" class="tab-content">
-                
-                  {% if liked_spots %}
-                    <ul>
-                      {% for spot in liked_spots %}
-                      <a href="{% url 'spots:detail' spot.pk %}">
-                        <li>{{ spot.title }}</li>
-                      </a>
-                      {% endfor %}
-                    </ul>
-                  {% endif %}
-
-                </div>
-              </div>
-              <div class="modal-footer">
-                <button class="btn btn-primary" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal">내 정보</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="modal fade" id="exampleModalToggle2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalToggleLabel2">내 정보</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <div class = "container text-center">
-                  <div style = "display: inline-block;">
-                  <div class="card" class = "mx-auto" style = "width : 400px;">
-                    {% if request.user.image %}
-                      <img src="{{ request.user.image.url }}" class="card-img-top rounded-2 mx-auto mt-4" style = "width: 300px;" alt="image">
-                    {% else %}
-                      <img src="{% static 'not-found-user.png' %}" class="card-img-top rounded-2 mx-auto mt-4" alt="image">
-                    {% endif %}
-                    <div class="card-body mal">
-                      <h4 class="card-text card_title">{{ request.user }}</h4>
-                      <p class="card-text">{{spot.title}}</p>
-                      <p class="card-text">이름: {{ request.user.last_name }}{{ request.user.first_name }}</p> 
-                      <p class="card-text">이메일: {{ request.user.email }}</p> 
-                    </div>
-                  </div>
-                  <div class = 'd-flex justify-content-evenly'>
-                    {% comment %} <a href="{% url #%}">
-                      <button type="button" class="btn btn-danger m-3">비밀번호 변경</button>
-                    </a> {% endcomment %}
-                    <form action="{% url 'accounts:delete' %}" method="POST">
-                      {% csrf_token %}
-                      <input type="submit" class="btn btn-danger m-3" value="회원탈퇴">
-                    </form>
-                    <a class="btn btn-danger m-3" href="{% url 'accounts:logout' %}" role="button">로그아웃</a>
-                  </div>
-                </div>
-              </div>
-              <div class="modal-footer">
-              </div>
-            </div>
-          </div>
-        </div>
       {% else %}
         <a class="btn btn-outline-dark-subtle mx-2" href="{% url 'accounts:login' %}" role="button">로그인</a>
         <a class="btn btn-outline-dark" href="{% url 'accounts:signup' %}" role="button">회원가입</a>
       {% endif %}
-    </div>
+        
   </nav>
-  <div class ="container">
   {%block content%}
   {%endblock content%}
-  </div>
+
   <script>
 		// 탭을 열기 위한 함수
-		function openTab(evt, tabName) {
-			var i, tabcontent, tablinks;
-			tabcontent = document.getElementsByClassName("tab-content");
-			for (i = 0; i < tabcontent.length; i++) {
-				tabcontent[i].style.display = "none";
-			}
-			tablinks = document.getElementsByTagName("button");
-			for (i = 0; i < tablinks.length; i++) {
-				tablinks[i].className = tablinks[i].className.replace(" active", "");
-			}
-			document.getElementById(tabName).style.display = "block";
-			evt.currentTarget.className += " active";
-		}
+    function openTab(evt, tabName) {
+      var i, tabcontent, tablinks;
+      tabcontent = document.getElementsByClassName("tab-content");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+      tablinks = document.getElementsByTagName("button");
+      for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].classList.remove("active"); 
+        tablinks[i].style.color = ""; 
+        tablinks[i].style.borderBottom = ""; 
+      }
+      document.getElementById(tabName).style.display = "block";
+      evt.currentTarget.classList.add("active"); 
+      evt.currentTarget.style.color = "#ff792a";
+      evt.currentTarget.style.borderBottom = "2px solid #ff792a"; 
+    };
 
+    document.getElementById("defaultOpen").click();
 
+    window.addEventListener('scroll', function() {
+      var navbar = document.querySelector('.navbar');
+      var navLinks = document.querySelectorAll('.nav-link');
+      var currentPosition = window.scrollY;
+      
+      if (currentPosition <= 350) {
+        navLinks.forEach(function(link) {
+          link.style.color = 'white';
+        });
+        navbar.style.backgroundColor = 'transparent';
+      } else {
+        navLinks.forEach(function(link) {
+          link.style.color = 'black';
+        });
+        navbar.style.backgroundColor = 'white';
+      }
+    });
+
+    function loadRecentlyViewedSpots() {
+      fetch('/recently_viewed_spots/')
+        .then(response => response.text())
+        .then(data => {
+          const recentlyViewedSpots = document.querySelector('#recently-viewed-spots');
+          recentlyViewedSpots.innerHTML = data;
+        })
+        .catch(error => console.error(error));
+    };
 	</script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
 </body>

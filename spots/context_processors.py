@@ -9,8 +9,6 @@ def liked_spots(request):
     else:
         return {}
     
-
-
 def recently_viewed(request):
     recently_viewed_spots = []
     viewed_spots_pks = request.session.get('viewed_spots_pks', [])
@@ -27,6 +25,6 @@ def recently_viewed(request):
 
     return {'recently_viewed_spots': recently_viewed_spots}
 
-
-# async def clear_recently_viewed(request):
-#     request.session['viewed_spots_pks'] = []
+# def clear_recently_viewed(request):
+#     if 'viewed_spots_pks' in request.session:
+#         request.session['viewed_spots_pks'] = []

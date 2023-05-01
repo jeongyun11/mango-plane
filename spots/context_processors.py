@@ -26,3 +26,7 @@ def recently_viewed(request):
             request.session['viewed_spots_pks'] = viewed_spots_pks
 
     return {'recently_viewed_spots': recently_viewed_spots}
+
+
+# async def clear_recently_viewed(request):
+#     request.session['viewed_spots_pks'] = []

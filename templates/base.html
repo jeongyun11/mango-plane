@@ -24,11 +24,13 @@
       top: 0;
       left: 0;
       width:100%;
-      background-color: rgba(0, 0, 0, 0);
+      background-color: white;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
       z-index: 999;
+
     }
     .nav-link{
-      color: white;
+      color: black;
     }
 
 
@@ -227,23 +229,6 @@
 
     document.getElementById("defaultOpen").click();
 
-    window.addEventListener('scroll', function() {
-      var navbar = document.querySelector('.navbar');
-      var navLinks = document.querySelectorAll('.nav-link');
-      var currentPosition = window.scrollY;
-      
-      if (currentPosition <= 350) {
-        navLinks.forEach(function(link) {
-          link.style.color = 'white';
-        });
-        navbar.style.backgroundColor = 'transparent';
-      } else {
-        navLinks.forEach(function(link) {
-          link.style.color = 'black';
-        });
-        navbar.style.backgroundColor = 'white';
-      }
-    });
 
     function loadRecentlyViewedSpots() {
       fetch('/recently_viewed_spots/')

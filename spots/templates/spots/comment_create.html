@@ -78,6 +78,19 @@
   text-align: center;
   background-color: #E9E9E9;
 }
+.submitButton.active {
+  min-width: 140px;
+  min-height: 50px;
+  padding-left: 14px;
+  padding-right: 14px;
+  border: 1px solid #E9E9E9;
+  border-radius: 50px;
+  font-size: 16px;
+  color: #FFFFFF;
+  text-align: center;
+  background-color: #ff7100;
+}
+
 {% comment %} 제출하기 버튼 활성화 오렌지 색 #ff7100; {% endcomment %}
 
 .titleBox {
@@ -108,7 +121,7 @@
 <section class='contentBox'>
   <!-- 제목 -->
   <div class="titleBox">
-    <p class="spotTitle">{{ spot.title }}에 대한</p><p class="spotSubtitle">솔직한 리뷰를 작성해주세요.</p>
+    <p class="spotTitle">{{ spot.title }}</p><p class="spotSubtitle">에 대한 솔직한 리뷰를 작성해주세요.</p>
   </div>
 
   <!-- 이모티콘 -->
@@ -142,9 +155,32 @@
     <form method="POST" enctype="multipart/form-data">
       {% csrf_token %}
       {{ form.as_p }}
+      <div class="buttonBox">
+        <button type="reset" class="resetButton">취소하기</button>
+        <button type="submit" class="submitButton">작성하기</button>
+      </div>
     </form>
   </div>
   
+</section>
+
+  <!-- 댓글 작성 JS -->
+  <script>
+    const submitButton = document.querySelector('.submitButton');
+    const contentField = document.querySelector('#id_content');
+
+    contentField.addEventListener('input', () => {
+      if (contentField.value.length > 0) {
+        submitButton.classList.add('active');
+        submitButton.disabled = false;
+      } else {
+        submitButton.classList.remove('active');
+        submitButton.disabled = true;
+      }
+    });
+  </script>
+
+  <!-- 이모션 JS -->
   <script>
     const emoteForms = document.querySelectorAll('.emote-form');
     emoteForms.forEach(form => {
@@ -168,58 +204,5 @@
       });
     });
   </script>
-  {% comment %} <div class="form-group">
-    {% for emotion in emotions %}
-      <div class="form-check d-inline-block mx-2">
-        <input class="form-check-input" type="radio" name="emotion" id="emotion{{ emotion.value }}" value="{{ emotion.value }}">
-        <label class="form-check-label" for="emotion{{ emotion.value }}">
-          {% if emotion.value == 1 %}
-          <i class="far fa-laugh-squint EmoticonPicker__Icon EmoticonPicker__Icon--Positive" id="emotion-icon{{ emotion.value }}"></i>
-          {% elif emotion.value == 2 %}
-            <i class="far fa-meh EmoticonPicker__Icon EmoticonPicker__Icon--Neutral" id="emotion-icon{{ emotion.value }}"></i>
-          {% elif emotion.value == 3 %}
-            <i class="far fa-frown EmoticonPicker__Icon EmoticonPicker__Icon--Negative" id="emotion-icon{{ emotion.value }}"></i>
-          {% endif %}
-          <span class="ml-2 EmoticonPicker__Label EmoticonPicker__Label--{{ emotion.value }}">{{ emotion.label }}</span>
-        </label>
-      </div>
-    {% endfor %}
-  </div> {% endcomment %}
-  <!-- 이모티콘 js -->
-  {% comment %} <script>
-    // 이모티콘 클릭 시 라디오 버튼 체크하기
-    const emoticons = document.querySelectorAll('.form-check-input');
-    emoticons.forEach(emoticon => {
-      emoticon.addEventListener('click', () => {
-        emoticons.forEach(other => {
-          other.checked = false;
-          const label = document.querySelector(`.EmoticonPicker__Label--${other.value}`);
-          if (label) {
-            label.style.color = '#888888'; // 다른 라디오 버튼은 회색으로 변경
-          }
-          const emoticonIcon = document.querySelector(`#emotion-icon${other.value}`);
-          if (emoticonIcon) {
-            emoticonIcon.style.color = '#888888'; // 다른 이모티콘 색상은 회색으로 변경
-          }
-        });
-        emoticon.checked = true;
-        const emoticonIcon = document.querySelector(`#emotion-icon${emoticon.value}`);
-        const label = document.querySelector(`.EmoticonPicker__Label--${emoticon.value}`);
-        if (label) {
-          label.style.color = '#FF792A'; // 선택한 라디오 버튼은 주황색으로 변경
-        }
-        if (emoticonIcon) {
-          emoticonIcon.style.color = '#FF792A'; // 선택한 이모티콘 색상은 주황색으로 변경
-        }
-      });
-    });
-  </script> {% endcomment %}
-  
-  
 
-  <div class="buttonBox">
-    <button type="reset" class="resetButton">취소하기</button>
-    <button type="submit" class="submitButton">작성하기</button>
-  </div>
-</section>
 {% endblock %}

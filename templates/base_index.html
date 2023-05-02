@@ -187,7 +187,7 @@
       {% if request.user.is_authenticated %}
       {% comment %} <p class="fs-6 mb-0 mx-2" style="vertical-align: middle">{{ user }}님 안녕하세요. </p> {% endcomment %}
         <!-- Button trigger modal -->
-        <button type="button" style="width: 50px; height: 50px; padding: 0;" class="btn btn-lg rounded-circle me-2 border-warning border border-5" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        <button type="button" style="width: 50px; height: 50px; padding: 0;" class="btn btn-lg rounded-circle me-2 border-warning border border-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
           {% if user.image %}
           <img class="rounded-circle" style="width: 100%; height: 100%; object-fit: cover; display: block; margin: auto;" src="{{ user.image.url }}" alt="Profile Image">
           {% else %}

@@ -125,7 +125,7 @@
   </div>
 
   <!-- 이모티콘 -->
-  <div class="emoticonBox">
+  {% comment %} <div class="emoticonBox">
     <div class="emoticon">
       {% for emotion in emotions %}
       <span>
@@ -150,7 +150,7 @@
         {% endif %}
       </span>
       {% endfor %}
-    </div>
+    </div> {% endcomment %}
     <!-- 댓글 작성 폼 -->
     <form method="POST" enctype="multipart/form-data">
       {% csrf_token %}
@@ -181,7 +181,7 @@
   </script>
 
   <!-- 이모션 JS -->
-  <script>
+  {% comment %} <script>
     const emoteForms = document.querySelectorAll('.emote-form');
     emoteForms.forEach(form => {
       form.addEventListener('submit', (event) => {
@@ -203,6 +203,6 @@
         xhr.send(new FormData(form)); // 요청 보내기
       });
     });
-  </script>
+  </script> {% endcomment %}
 
 {% endblock %}

@@ -14,12 +14,6 @@ def index(request):
     }
     return render(request, 'spots/index.html', context)
 
-
-# EMOTIONS = [
-#     {'label': '좋았다', 'value': 1},
-#     {'label': '괜찮다', 'value': 2},
-#     {'label': '별로', 'value': 3},
-# ]
 @login_required
 def detail(request, spot_pk):
     spot = Spot.objects.get(pk=spot_pk)
@@ -102,8 +96,6 @@ def delete(request, pk):
 
     return redirect('spots:index')
 
-EMOTIONS = [    {'label': '좋았다', 'value': 1},    {'label': '괜찮다', 'value': 2},    {'label': '별로', 'value': 3},]
-
 @login_required
 def comment_create(request, spot_pk):
     spot = Spot.objects.get(pk=spot_pk)
@@ -156,19 +148,3 @@ def search(request):
         'keyword': keyword,
     }
     return render(request, 'spots/search.html', context)
-
-
-@login_required
-def emotes(request, spot_pk, emotion):
-    spot = Spot.objects.get(pk=spot_pk)
-    filter_query = Emote.objects.filter(
-        spot=spot,
-        user=request.user,
-        emotion=emotion,
-    )
-    if filter_query.exists():
-        filter_query.delete()
-    else:
-        Emote.objects.create(spot=spot, user=request.user, emotion=emotion)
-
-    return redirect('spots:detail', spot_pk)

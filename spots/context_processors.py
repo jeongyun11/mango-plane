@@ -2,7 +2,7 @@ from .models import Spot
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.db.models import Q
-
+from .views import search
 def liked_spots(request):
     if request.user.is_authenticated:
         return {'liked_spots': Spot.objects.filter(like_users=request.user)}
@@ -28,3 +28,7 @@ def recently_viewed(request):
 # def clear_recently_viewed(request):
 #     if 'viewed_spots_pks' in request.session:
 #         request.session['viewed_spots_pks'] = []
+
+
+def spot_search(request):
+    return {'search': search}

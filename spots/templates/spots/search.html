@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block style %}
   a {
@@ -40,6 +41,11 @@
 .search-result {
   color: orange;
 }
+
+.pages{
+  position: inline-block;
+}
+
 {% endblock style %}
 
 {% block content %}
@@ -55,17 +61,19 @@
   </form>
 </div>
 
-<h2 class="search-result">{{ keyword }}의 검색결과</h2>
-  <div class="d-inline-flex row w-50 justify-content-center ">
-    {% for spot in spots %}
+<div>
+  <h2 class="search-result">{{ keyword }}의 검색결과</h2>
+  <div class="d-inline-flex row w-50 ">
+    {% for spot in page_obj %}
       <div class="col-md-6" >
         <a href="{% url 'spots:detail' spot.pk %}">
           <div class="card border-white">
             {% if spot.image %}
             <img src="{{spot.image.url}}" alt="{{spot.title}}">
             {% else %}
-            {% comment %} <img src="{% static 'No-Image-Placeholder.svg.png' %}" class="card-img-top" alt="image"> {% endcomment %}
+            <img src="{% static 'No-Image-Placeholder.svg.png' %}" alt="image">
             {% endif %}
+            
             <div class="card-body">
               <p class="card=text">{{spot.title}}</p>
             </div>
@@ -74,4 +82,14 @@
       </div>
     {% endfor %}
   </div>
+  <div>
+    {% for page in pages %}
+    <form action="{% url 'spots:search' %}" method="GET" class="pages">
+      <input type="hidden" name="page" value="{{ page }}">
+      <input type="hidden" name="keyword" value="{{ keyword }}">
+      <input type="submit" value="{{ page }}">
+    </form>
+    {% endfor %}
+  </div> 
+</div>
 {% endblock content %}

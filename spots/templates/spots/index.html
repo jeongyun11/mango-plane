@@ -152,7 +152,9 @@
       <form action="{% url 'spots:search' %}" class="search" style="display: flex; align-items: center; width: 742px;">
           <i class="fas fa-search search-label__icon ms-5" style="color: #d4d4d4;"></i>
         </label>
+
         <input class="search-input__text ms-3" placeholder="여행지" name="keyword" id="keyword" style="flex: 1;">
+        <input type="hidden" name="page" value=1>
         <input class="search-input__submit" type="submit" value="검색" style="width: 100px;">
       </form>
     </div>

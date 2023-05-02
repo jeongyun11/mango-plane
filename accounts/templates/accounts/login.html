@@ -27,6 +27,25 @@
   padding: 10px;
 }
 
+label {
+  display: inline-block;
+  width: 100px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+input[type="text"], input[type="password"], input[type="email"] {
+  width: 250px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  margin-bottom: 10px;
+}
+
+input[type="submit"]:hover {
+  background-color: orange;
+}
+
 {% endblock style %}
 
 {% block content %}
@@ -35,7 +54,12 @@
     <p>로그인하면 가고 싶은 식당을 저장할 수 있어요!</p>
     <form class="login" action="{% url 'accounts:login' %}" method="POST">
       {% csrf_token %}
-      {{ form.as_p }}
+      <label for="{{ form.username.id_for_label }}">아이디</label>
+      {{ form.username }}
+      <br>
+      <label for="{{ form.password.id_for_label }}">비밀번호</label>
+      {{ form.password }}
+      <br>
       <input class="loginButton" type="submit" value="로그인">
     </form>
   </div>

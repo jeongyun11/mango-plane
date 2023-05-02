@@ -14,12 +14,6 @@ def index(request):
     }
     return render(request, 'spots/index.html', context)
 
-
-# EMOTIONS = [
-#     {'label': '좋았다', 'value': 1},
-#     {'label': '괜찮다', 'value': 2},
-#     {'label': '별로', 'value': 3},
-# ]
 @login_required
 def detail(request, spot_pk):
     spot = Spot.objects.get(pk=spot_pk)

@@ -26,14 +26,16 @@ class Spot(models.Model):
 
 
 class Comment(models.Model):
+    VOTE_CHOICES = (
+        ('like', 'Like'),
+        ('dislike', 'Dislike'),
+        ('soso', 'Soso'),
+    )
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_comments')
     article = models.ForeignKey(Spot, on_delete=models.CASCADE)
     content = models.TextField(null=False)
     image   = models.ImageField(upload_to='tourlist_destinations/', null=True, blank=True)
+    vote = models.CharField(max_length=7, choices=VOTE_CHOICES)
+
     
-    
-class Emote(models.Model):
-    spot = models.ForeignKey(Spot, on_delete=models.CASCADE)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    emotion = models.CharField(max_length=10)

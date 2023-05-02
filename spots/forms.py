@@ -110,7 +110,7 @@ class CommentForm(forms.ModelForm):
 
     class Meta:
         model = Comment
-        fields = ('content', 'image')
+        fields = ('content', 'image','vote')
 
     def __init__(self, *args, **kwargs):
         spot = kwargs.pop('spot') # spot 인자를 받아옵니다.

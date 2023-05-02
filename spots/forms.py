@@ -107,10 +107,26 @@ class CommentForm(forms.ModelForm):
             'style': 'overflow: hidden; overflow-wrap: break-word; width: 644px; height: 150px; border: 1px solid #DBDBDB;',
         }),
     )
+    vote = forms.ChoiceField(
+        label='평점',
+        choices=Comment.VOTE_CHOICES,
+        widget=forms.RadioSelect(attrs={
+            'onclick': "var radio = document.getElementsByName('vote');\
+                        for (var i=0; i<radio.length; i++) {\
+                            if (radio[i].checked) {\
+                                radio[i].parentNode.style.color='#ff9008';\
+                                radio[i].parentNode.querySelector('.EmoticonPicker__Icon').style.color = '#ff9008';\
+                            } else {\
+                                radio[i].parentNode.style.color='#959595';\
+                                radio[i].parentNode.querySelector('.EmoticonPicker__Icon').style.color = '#959595';\
+                            }\
+                        }"
+        }),
+    )
 
     class Meta:
         model = Comment
-        fields = ('content', 'image')
+        fields = ('content', 'vote', 'image')
 
     def __init__(self, *args, **kwargs):
         spot = kwargs.pop('spot') # spot 인자를 받아옵니다.

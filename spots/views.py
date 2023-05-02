@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
-from .models import Spot, Comment, Emote
+from .models import Spot, Comment
 from .forms import SpotForm, CommentForm
 from django.contrib.auth import get_user_model
 from django.core.paginator import Paginator
-
+from django.db.models import Count
 
 
 def index(request):
@@ -15,23 +15,16 @@ def index(request):
     }
     return render(request, 'spots/index.html', context)
 
-
-EMOTIONS = [
-    {'label': '좋았다', 'value': 1},
-    {'label': '괜찮다', 'value': 2},
-    {'label': '별로', 'value': 3},
-]
 @login_required
 def detail(request, spot_pk):
     spot = Spot.objects.get(pk=spot_pk)
     comments = spot.comment_set.all()
     comment_count = comments.count()
-    emotions = []
-    for emotion in EMOTIONS:
-        label = emotion['label']
-        value = emotion['value']
-        count = Emote.objects.filter(spot=spot, emotion=value).count()
-        emotions.append({'label': label, 'value': value, 'count': count})
+
+    like_count = spot.comment_set.filter(vote='like').count()
+    dislike_count = spot.comment_set.filter(vote='dislike').count()
+    soso_count = spot.comment_set.filter(vote='soso').count()
+
     if request.method == 'POST':
         comment_form = CommentForm(request.POST, request.FILES, spot=spot)
         if comment_form.is_valid():
@@ -46,8 +39,10 @@ def detail(request, spot_pk):
         'spot': spot,
         'comments': comments,
         'comment_form': comment_form,
-        'emotions': emotions,
         'comment_count': comment_count,
+        'like_count': like_count,
+        'dislike_count': dislike_count,
+        'soso_count': soso_count,
     }
     return render(request, 'spots/detail.html', context)
 
@@ -102,19 +97,10 @@ def delete(request, pk):
 
     return redirect('spots:index')
 
-EMOTIONS = [    {'label': '좋았다', 'value': 1},    {'label': '괜찮다', 'value': 2},    {'label': '별로', 'value': 3},]
-
 @login_required
 def comment_create(request, spot_pk):
     spot = Spot.objects.get(pk=spot_pk)
-    emotions = []
-    for emotion in EMOTIONS:
-        label = emotion['label']
-        value = emotion['value']
-        count = Emote.objects.filter(spot=spot, emotion=value).count()
-        exist = Emote.objects.filter(spot=spot, emotion=value, user=request.user).exists()
-        emotions.append({'label': label, 'value': value, 'count': count, 'exist': exist})
-    
+
     if request.method == 'POST':
         form = CommentForm(request.POST, request.FILES, spot=spot)
         if form.is_valid():
@@ -125,7 +111,7 @@ def comment_create(request, spot_pk):
             return redirect('spots:detail', spot_pk=spot.pk)
     else:
         form = CommentForm(spot=spot)
-    return render(request, 'spots/comment_create.html', {'form': form, 'spot': spot, 'emotions': emotions})
+    return render(request, 'spots/comment_create.html', {'form': form, 'spot': spot,})
 
 
 @login_required
@@ -172,19 +158,3 @@ def search(request):
         'pages': pages,
     }
     return render(request, 'spots/search.html', context)
-
-
-@login_required
-def emotes(request, spot_pk, emotion):
-    spot = Spot.objects.get(pk=spot_pk)
-    filter_query = Emote.objects.filter(
-        spot=spot,
-        user=request.user,
-        emotion=emotion,
-    )
-    if filter_query.exists():
-        filter_query.delete()
-    else:
-        Emote.objects.create(spot=spot, user=request.user, emotion=emotion)
-
-    return redirect('spots:detail', spot_pk)

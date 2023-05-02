@@ -13,6 +13,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
 
   <style>
+    a {
+      text-decoration: none; /* 밑줄 제거 */
+      color: inherit;
+    }
+    
     body {
       font-family: 'Noto Sans KR', sans-serif;
     }
@@ -73,12 +78,55 @@
       border-bottom: 2px solid orange;
     }
 
+    .search {
+      background-color: white;
+      border-radius: 50px;
+      border-color: orange;
+      border-style: solid;
+      width: 40%;
+      height: 50px;
+      justify-content: center; 
+  
+    }
+  
+    .search-label {
+        color: gray;
+    }
+  
+    .search-input__text {
+        border-style: none;
+        outline: none;
+        height: 100%;
+        border-radius: 50px;
+    }
+  
+    .search-input__text::placeholder {
+      color: lightgray;
+      font-size: 20px;
+    }
+  
+    .search-input__submit {
+      border-radius: 50px;
+      border-style: none;
+      background-color: orange;
+      color: white;
+      width: 100px;
+      height: 100%;
+      margin-left: auto;
+    }
+  
+    .search-label__icon {
+      font-size: 24px;
+    }
+
+    
 
   {%block style%}
   {%endblock style%}
   </style>
 </head>
 <body>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
   <!-- Modal -->
   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style = "z-index:2000" >
     <div class="modal-dialog">
@@ -169,29 +217,52 @@
 </div>
   <nav class="navbar navbar-expand nav">
     <div class="d-flex container-fluid" >
-      <a class="me-auto navbar-brand" href="{% url 'spots:index' %}">
+      <a class="me-5 navbar-brand" href="{% url 'spots:index' %}">
         <img src="{% static 'logo3.png' %}" alt="logo" width="100">
       </a>
+        <form action="{% url 'spots:search' %}" class="search" style="display: flex; align-items: center;">
+          <i class="fas fa-search search-label__icon ms-5" style="color: #d4d4d4;"></i>
+        </label>
+          <input class="search-input__text ms-3" placeholder="여행지" name="keyword" id="keyword" style = 'width: 70%' >
+          <input class="search-input__submit" type="submit" value="검색" style="width: 100px;">
+        </form>
       {% comment %} <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button> {% endcomment %}
       <div class="ms-3" id="navbarNav">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <a class="nav-link me-5" href="{% url 'spots:index' %}">Home</a>
+            <a class="nav-link me-3" href="{% url 'spots:index' %}">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link me-5" href="{% url 'spots:create' %}">작성하기</a>
+            <a class="nav-link me-3" href="{% url 'spots:create' %}">작성하기</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link me-5" href="{% url 'accounts:profile' %}">Profile</a>
+            <a class="nav-link me-3" href="{% url 'accounts:profile' %}">Profile</a>
+          </li>
+          <li class="nav-item">
+            {% if request.user.is_authenticated %}
+            {% comment %} <p class="fs-6 mb-0 mx-2" style="vertical-align: middle">{{ user }}님 안녕하세요. </p> {% endcomment %}
+              <!-- Button trigger modal -->
+              <button type="button" style="width: 50px; height: 50px; padding: 0; border-color: orange; border-width: 3px; box-sizing: border-box;" class="btn btn-lg rounded-circle me-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                {% if user.image %}
+                <img class="rounded-circle" style="width: 100%; height: 100%; object-fit: cover; display: block; margin: auto;" src="{{ user.image.url }}" alt="Profile Image">
+                {% else %}
+                <img class="rounded-circle" style="width: 100%; height: 100%; object-fit: cover; display: block; margin: auto;" src="{% static 'not-found-user.png' %}" alt="Profile Image">
+                {% endif %}
+              </button>
+            {% else %}
+              <a class="btn btn-outline-dark-subtle mx-2" href="{% url 'accounts:login' %}" role="button">로그인</a>
+              <a class="btn btn-outline-dark" href="{% url 'accounts:signup' %}" role="button">회원가입</a>
+            {% endif %}
+          </div>
           </li>
         </ul>
       </div>
       {% if request.user.is_authenticated %}
       {% comment %} <p class="fs-6 mb-0 mx-2" style="vertical-align: middle">{{ user }}님 안녕하세요. </p> {% endcomment %}
         <!-- Button trigger modal -->
-        <button type="button" style="width: 50px; height: 50px; padding: 0; border-color: orange; border-width: 3px; box-sizing: border-box;" class="btn btn-lg rounded-circle me-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        <button type="button" style="width: 50px; height: 50px; padding: 0;" class="btn btn-lg rounded-circle me-2 border-warning border border-5" data-bs-toggle="modal" data-bs-target="#exampleModal">
           {% if user.image %}
           <img class="rounded-circle" style="width: 100%; height: 100%; object-fit: cover; display: block; margin: auto;" src="{{ user.image.url }}" alt="Profile Image">
           {% else %}

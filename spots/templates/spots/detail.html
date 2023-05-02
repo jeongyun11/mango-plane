@@ -1,26 +1,93 @@
 {% extends "base.html" %}
+
+{% block style %}
+.EmoticonPicker__Icon {
+  font-size: 44px;
+  margin: 8px;
+  color: #ff9008;
+}
+.Icon {
+  font-size: 32px;
+  
+}
+.Icon2 {
+  font-size: 32px;
+  color: #959595;
+}
+.Icon:hover .fas {
+  color: #ff9008;
+}
+.size {
+  object-fit: cover;
+  width: 120px;
+  height: 120px;
+}
+.review-write-link:hover .review-write-text,
+.review-write-link:hover .review-write-icon {
+  color: #ff9008;
+}
+.review-write-link {
+  color: #959595;
+  text-decoration: none;
+}
+.review-write-text {
+  color: #959595;
+}
+.like-spot-icon {
+  color: #959595;
+}
+
+.like-spot:hover .like-spot-icon,
+.like-spot-icon.active {
+  color: #ff9008;
+}
+
+.like-spot-text {
+  color: #959595;
+}
+
+.like-spot:hover .like-spot-text,
+.like-spot-text.active {
+  color: #ff9008;
+}
+.custom-button {
+  height: 38px;
+}
+{% endblock style %}
+
 {% block content %}
+<!-- 이모티콘 link -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
 
 <section class='container' style='max-width: 800px;'>
   <div class='d-flex justify-content-between mt-3'>
     <h3>{{spot.title}} <span style="color: #FF792A;">4.3</span></h3>
-    <div class='d-grid gap-2 d-md-flex justify-content-md-end'>
+    <div class='d-grid gap-2 d-md-flex justify-content-md-end align-items-center'>
       {% if spot.user == user %}
-      <a href="{% url 'spots:update_spot' spot.pk %}" class="btn btn-primary me-2">
+      <a href="{% url 'spots:update_spot' spot.pk %}" class="btn btn-primary me-2 custom-button">
         <span>수정</span>
       </a>
         <form action="{% url 'spots:delete' spot.pk %}" method="POST" class="d-inline-block">
           {% csrf_token %}
-          <input type="submit" value="삭제" class="btn btn-danger">
+          <input type="submit" value="삭제" class="btn btn-danger custom-button">
         </form>
-        <a class="btn btn-outline-secondary" href="{% url 'spots:comment_create' spot_pk=spot.pk %}" role="button">리뷰 쓰기</a>
-        <form action="{%url 'spots:likes' spot.pk %}" method="POST">
+    
+        <div class="d-flex flex-column align-items-center review-write">
+          <a href="{% url 'spots:comment_create' spot_pk=spot.pk %}" role="button" class="review-write-link"
+             onclick="event.preventDefault(); writeReview(this);">
+            <i class="fas fa-pencil-alt Icon review-write-icon custom-button"></i>
+            <p class="mb-0 review-write-text">리뷰쓰기</p>
+          </a>
+        </div>
+    
+        <form action="{% url 'spots:likes' spot.pk %}" method="POST">
           {% csrf_token %}
-          {% if request.user in spot.like_users.all %}
-            <input type="submit" value = "가고싶다 취소" class="btn btn-warning">
-            {% else %}
-            <input type="submit" value = "가고싶다" class="btn btn-warning">
-          {% endif %}
+          <div class="d-flex flex-column align-items-center like-spot">
+            <button type="submit" class="btn btn-link p-0 Icon custom-button">
+              <i class="fas fa-star like-spot-icon {% if request.user in spot.like_users.all %}active{% endif %}"></i>
+            </button>
+            <p class="mb-0 like-spot-text {% if request.user in spot.like_users.all %}active{% endif %}">가고싶다</p>
+          </div>
         </form>
       {% else %}
       {% endif %}
@@ -36,62 +103,82 @@
     {% if spot.website %}
       <p style="color: #959595;">웹사이트: <a href="{{ spot.website }}" style="color: black;">여행지 홈페이지로 가기</a></p>
     {% endif %}
-    {% comment %} <p>
-    <hr>
-    {% if spot.image %}
-        <div class="mb-3">
-          <img src="{{ spot.image.url }}" alt="{{spot.title}}">
-        </div>
-    {% endif %}
-    <p>
-      {{spot.content}}
-    </p> {% endcomment %}
-    
+
     <hr>
 
     <p style="display: flex; justify-content: space-between; align-items: center;">리뷰 ({{ comment_count }}) 
       <span style="margin-left: auto;">
         전체 ({{ comment_count }}) |
-        {% for emotion in emotions %} 
-        {{ emotion.label }}({{ emotion.count }}) 
-        {% if not forloop.last %}| {% endif %}
-        {% endfor %}
+        좋아요: ({{ like_count }}) |
+        싫어요: ({{ dislike_count }}) |
+        보통: ({{ soso_count }})
       </span>
     </p>
 
 
     {% for comment in comments %}
-    <div>
-      <p>리뷰 작성자 -
-        {{comment.user}}</p>
-        {% if comment.image %}
-        <div class="mb-3">
-          <img src="{{ comment.image.url }}" alt="{{comment.title}}">
-        </div>
+  <div class="row mt-4">
+    <div class="col-2">
+      <button type="button" style="width: 70px; height: 70px; padding: 0; box-sizing: border-box;" class="btn btn-lg rounded-circle me-2">
+        <img class="rounded-circle" style="width: 100%; height: 100%; object-fit: cover; display: block; margin: auto;" src="{{ user.image.url }}" alt="Profile Image">
+      </button>
+
+      {% comment %} <form action="{%url 'spots:comment_likes' spot.pk comment.pk %}" method="POST">
+        {% csrf_token %}
+        {% if request.user in comment.like_users.all %}
+        <input type="submit" value="좋아요 취소">
+        {% else %}
+        <input type="submit" value="좋아요">
         {% endif %}
-        <p>
-          리뷰 내용 -
-          {{comment.content}}
-        </p>
-        
-        <form action="{%url 'spots:comment_likes' spot.pk comment.pk %}" method="POST">
-          {% csrf_token %}
-          {% if request.user in comment.like_users.all %}
-          <input type="submit" value = "좋아요 취소">
-          {% else %}
-          <input type="submit" value = "좋아요">
-          {% endif %}
-        </form>
-        
-        {% if comment.user == user %}
-        <form action="{% url 'spots:comment_delete' spot.pk comment.pk %}" method="POST">
-          {% csrf_token %}
-          <input type="submit" value="댓글 삭제">
-        </form>
+      </form> {% endcomment %}
+      {% if comment.user == user %}
+      <form action="{% url 'spots:comment_delete' spot.pk comment.pk %}" method="POST">
+        {% csrf_token %}
+        <input type="submit" value="댓글 삭제">
+      </form>
+      {% endif %}
+    </div>
+    <div class="col-8">
+      <p style="color: #959595;">{{ comment.created_at|date:"Y-m-d" }}</p>
+      <p>{{comment.content}}</p>
+      {% if comment.image %}
+      <div class="mb-3">
+        <img src="{{ comment.image.url }}" alt="{{comment.title}}" class="size">
+      </div>
+      {% endif %}
+    </div>
+    <div class="col-2">
+      <div class="comment">
+        {% if comment.vote == 'like' %}
+          <div class="d-flex flex-column align-items-center">
+            <i class="far fa-laugh-squint EmoticonPicker__Icon EmoticonPicker__Icon--Positive"></i>
+            <p class="mb-0" style="color: #ff9008;">좋았다</p>
+          </div>
+        {% elif comment.vote == 'soso' %}
+          <div class="d-flex flex-column align-items-center">
+            <i class="far fa-meh EmoticonPicker__Icon EmoticonPicker__Icon--Neutral"></i>
+            <p class="mb-0" style="color: #ff9008;">괜찮다</p>
+          </div>
+        {% elif comment.vote == 'dislike' %}
+          <div class="d-flex flex-column align-items-center">
+            <i class="far fa-frown EmoticonPicker__Icon EmoticonPicker__Icon--Negative"></i>
+            <p class="mb-0" style="color: #ff9008;">나쁘다</p>
+          </div>
         {% endif %}
       </div>
-      <hr>
-      {% endfor %}
-    </section>    
-      {% endblock content %}
+    </div>
+  </div>
+  <hr>
+  {% endfor %}
+    </section>
+
+
+    <script>
+      function writeReview(link) {
+        link.querySelector('.review-write-text').style.color = 'orange';
+        link.querySelector('.review-write-icon').style.color = 'orange';
+        window.location.href = link.href;
+      }
+      </script>
+{% endblock content %}
       

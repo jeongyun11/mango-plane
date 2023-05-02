@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.core.validators import RegexValidator
+from django.utils.safestring import mark_safe
 
 
 class Spot(models.Model):
@@ -26,14 +27,18 @@ class Spot(models.Model):
 
 
 class Comment(models.Model):
+    VOTE_CHOICES = (
+        ('like', mark_safe('<i class="far fa-laugh-squint EmoticonPicker__Icon EmoticonPicker__Icon--Neutral"></i> 좋았다')),
+        ('soso', mark_safe('<i class="far fa-meh EmoticonPicker__Icon EmoticonPicker__Icon--Neutral"></i>괜찮다')),
+        ('dislike', mark_safe('<i class="far fa-frown EmoticonPicker__Icon EmoticonPicker__Icon--Neutral"></i>나쁘다')),
+    )
+    vote = models.CharField(max_length=10, choices=VOTE_CHOICES)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_comments')
     article = models.ForeignKey(Spot, on_delete=models.CASCADE)
     content = models.TextField(null=False)
     image   = models.ImageField(upload_to='tourlist_destinations/', null=True, blank=True)
+    vote = models.CharField(max_length=7, choices=VOTE_CHOICES)
+    created_at = models.DateTimeField(auto_now_add=True)
+
     
-    
-class Emote(models.Model):
-    spot = models.ForeignKey(Spot, on_delete=models.CASCADE)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    emotion = models.CharField(max_length=10)

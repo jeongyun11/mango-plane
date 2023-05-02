@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Spot, Comment
 from .forms import SpotForm, CommentForm
 from django.contrib.auth import get_user_model
+from django.core.paginator import Paginator
 from django.db.models import Count
 
 
@@ -143,8 +144,17 @@ def comment_likes(request, spot_pk, comment_pk):
 def search(request):
     keyword = request.GET.get('keyword')
     spots = Spot.objects.filter(title__contains = keyword) # SELECT ... FROM ... LIKE '%<keyword>%'
+    print(len(spots))
+    len_element = 2
+    paginator = Paginator(spots, len_element)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    len_page = (len(spots) + 1) // len_element
+    pages = range(1, len_page + 1)
+    print(pages)
     context = {
-        'spots': spots,
+        'page_obj': page_obj,
         'keyword': keyword,
+        'pages': pages,
     }
     return render(request, 'spots/search.html', context)

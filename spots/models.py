@@ -28,6 +28,7 @@ class Spot(models.Model):
     longitude = models.FloatField(null=True)
 
 
+
 class Comment(models.Model):
     VOTE_CHOICES = (
         ('like', mark_safe('<i class="far fa-laugh-squint EmoticonPicker__Icon EmoticonPicker__Icon--Neutral"></i> 좋았다')),
@@ -39,8 +40,10 @@ class Comment(models.Model):
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_comments')
     article = models.ForeignKey(Spot, on_delete=models.CASCADE)
     content = models.TextField(null=False)
-    image   = models.ImageField(upload_to='tourlist_destinations/', null=True, blank=True)
     vote = models.CharField(max_length=7, choices=VOTE_CHOICES)
     created_at = models.DateTimeField(auto_now_add=True)
 
+class CommentImage(models.Model):
+    image = models.ImageField(upload_to='tourlist_destinations/')
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='images')
     

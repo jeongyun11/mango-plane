@@ -124,16 +124,27 @@
     <p class="spotTitle">{{ spot.title }}</p><p class="spotSubtitle">에 대한 솔직한 리뷰를 작성해주세요.</p>
   </div>
 
-    <!-- 댓글 작성 폼 -->
-    <form method="POST" enctype="multipart/form-data">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <div class="buttonBox">
-        <button type="reset" class="resetButton">취소하기</button>
-        <button type="submit" class="submitButton">작성하기</button>
+  <!-- 댓글 작성 폼 -->
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+  
+    <!-- 이미지 업로드 폼셋 -->
+    {{ formset.management_form }}
+    {% for image_form in formset %}
+      <div class="image-form">
+        {{ image_form.image.label_tag }}
+        {% if forloop.first %} <!-- 첫 번째 폼에만 multiple 속성 추가 -->
+          <input type="file" name="{{ image_form.prefix }}-image" multiple>
+        {% endif %}
       </div>
-    </form>
-  </div>
+    {% endfor %}
+  
+    <div class="buttonBox">
+      <button type="reset" class="resetButton">취소하기</button>
+      <button type="submit" class="submitButton">작성하기</button>
+    </div>
+  </form>
   
 </section>
 

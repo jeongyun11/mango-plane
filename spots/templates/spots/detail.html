@@ -141,7 +141,9 @@
     <div class="col-8">
       <p style="color: #959595;">{{ comment.created_at|date:"Y-m-d" }}</p>
       <p>{{comment.content}}</p>
-
+      {% for image in comment.images.all %}
+        <img src="{{ image.image.url }}" alt="Comment image" class="size">
+      {% endfor %}
     </div>
     <div class="col-2">
       <div class="comment">
@@ -163,7 +165,7 @@
         {% endif %}
       </div>
     </div>
-  </div>
+</div>
   <hr>
   <form action=""></form>
   print({{spot.latitude}}, {{spot.longitude}}) 

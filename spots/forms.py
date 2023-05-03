@@ -1,5 +1,6 @@
 from django import forms
-from .models import Spot, Comment
+from .models import Spot, Comment, CommentImage
+from django.forms import formset_factory
 
 
 class SpotForm(forms.ModelForm):
@@ -127,9 +128,16 @@ class CommentForm(forms.ModelForm):
 
     class Meta:
         model = Comment
-        fields = ('content', 'vote', 'image')
+        fields = ('content', 'vote')  # 'image'를 제거합니다.
 
     def __init__(self, *args, **kwargs):
-        spot = kwargs.pop('spot') # spot 인자를 받아옵니다.
+        spot = kwargs.pop('spot')  # spot 인자를 받아옵니다.
         super().__init__(*args, **kwargs)
         self.fields['content'].widget.attrs['placeholder'] = f"{spot.user}님, 이번 여행은 어떠셨나요? 여행지의 분위기와 후기가 궁금해요!"
+        
+class CommentImageForm(forms.ModelForm):
+    class Meta:
+        model = CommentImage
+        fields = ('image',)
+
+CommentImageFormSet = forms.formset_factory(CommentImageForm, extra=1, max_num=30)

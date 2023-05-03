@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block style %}
 .EmoticonPicker__Icon {
   font-size: 44px;
@@ -120,7 +120,8 @@
   <div class="row mt-4">
     <div class="col-2">
       <button type="button" style="width: 70px; height: 70px; padding: 0; box-sizing: border-box;" class="btn btn-lg rounded-circle me-2">
-        <img class="rounded-circle" style="width: 100%; height: 100%; object-fit: cover; display: block; margin: auto;" src="{{ person.image.url }}" alt="Profile Image">
+        <img class="rounded-circle" style="width: 100%; height: 100%; object-fit: cover; display: block; margin: auto;" 
+        src="{% if person.image %}{{ person.image.url }} {% else %} {% static 'not-found-user.png' %}{% endif %}" alt="Profile Image">
       </button>
 
         <form action="{%url 'spots:comment_likes' spot.pk comment.pk %}" method="POST">

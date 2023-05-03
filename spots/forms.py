@@ -111,6 +111,7 @@ class CommentForm(forms.ModelForm):
         label='평점',
         choices=Comment.VOTE_CHOICES,
         widget=forms.RadioSelect(attrs={
+            'style': 'display: none;',
             'onclick': "var radio = document.getElementsByName('vote');\
                         for (var i=0; i<radio.length; i++) {\
                             if (radio[i].checked) {\

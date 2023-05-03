@@ -131,7 +131,6 @@ def likes(request, spot_pk):
         spot.like_users.add(request.user)
     return redirect('spots:detail', spot_pk)
 
-
 @login_required
 def comment_likes(request, spot_pk, comment_pk):
     comment =  Comment.objects.get(pk=comment_pk)

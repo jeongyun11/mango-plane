@@ -20,9 +20,11 @@ def detail(request, spot_pk):
     comments = spot.comment_set.all()
     comment_count = comments.count()
 
-    like_count = spot.comment_set.filter(vote='like').count()
-    dislike_count = spot.comment_set.filter(vote='dislike').count()
-    soso_count = spot.comment_set.filter(vote='soso').count()
+    like_count = spot.comment_set.filter(vote=5.0).count()
+    soso_count = spot.comment_set.filter(vote=3.0).count()
+    dislike_count = spot.comment_set.filter(vote=1.0).count()
+
+    average_rating = spot.calculate_average_rating()
 
     if request.method == 'POST':
         comment_form = CommentForm(request.POST, request.FILES, spot=spot)
@@ -42,6 +44,7 @@ def detail(request, spot_pk):
         'like_count': like_count,
         'dislike_count': dislike_count,
         'soso_count': soso_count,
+        'average_rating': average_rating,
     }
     return render(request, 'spots/detail.html', context)
 

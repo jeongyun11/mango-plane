@@ -9,7 +9,7 @@
     margin: 60px 0;
   }
 
-  form {
+  #signupform {
     max-width: 500px;
     margin: 0 auto;
     padding: 20px;
@@ -31,7 +31,7 @@
     margin-bottom: 10px;
   }
 
-  input[type="submit"] {
+  #signup-submit {
     background-color: lightgray;
     color: #fff;
     border: none;
@@ -64,7 +64,7 @@
 {% block content %}
   <div class="container">
     <h1>회원가입</h1>
-    <form action="{% url 'accounts:signup' %}" method="POST" enctype="multipart/form-data">
+    <form action="{% url 'accounts:signup' %}" method="POST" enctype="multipart/form-data" id = "signupform">
       <div class="form-group">
         <label for="{{ form.first_name.id_for_label }}">이름</label>
         {{ form.first_name }}
@@ -90,7 +90,7 @@
         {{ form.email }}
       </div>
       {% csrf_token %}
-      <input type="submit" value="회원 가입">
+      <input type="submit" value="회원 가입" id = "signup-submit">
     </form>
   </div>
 {% endblock content %}

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block style %}
 .EmoticonPicker__Icon {
   font-size: 44px;
@@ -53,6 +53,10 @@
 .custom-button {
   height: 38px;
 }
+
+none-margin-bottom{
+  margin-bottom: 0px;
+}
 {% endblock style %}
 
 {% block content %}
@@ -72,11 +76,10 @@
           <input type="submit" value="삭제" class="btn btn-danger custom-button">
         </form>
     
-        <div class="d-flex flex-column align-items-center review-write">
-          <a href="{% url 'spots:comment_create' spot_pk=spot.pk %}" role="button" class="review-write-link"
-             onclick="event.preventDefault(); writeReview(this);">
-            <i class="fas fa-pencil-alt Icon review-write-icon custom-button"></i>
-            <p class="mb-0 review-write-text">리뷰쓰기</p>
+        <div class="d-flex flex-column align-items-center text-center review-write">
+          <a href="{% url 'spots:comment_create' spot_pk=spot.pk %}" role="button" class="review-write-link" onclick="event.preventDefault(); writeReview(this);">
+            <i class="fas fa-pencil-alt Icon review-write-icon custom-button mn-n2"></i>
+            <p class="mb-0 mt-0 review-write-text">리뷰쓰기</p>
           </a>
         </div>
     
@@ -121,7 +124,8 @@
   <div class="row mt-4">
     <div class="col-2">
       <button type="button" style="width: 70px; height: 70px; padding: 0; box-sizing: border-box;" class="btn btn-lg rounded-circle me-2">
-        <img class="rounded-circle" style="width: 100%; height: 100%; object-fit: cover; display: block; margin: auto;" src="{{ user.image.url }}" alt="Profile Image">
+        <img class="rounded-circle" style="width: 100%; height: 100%; object-fit: cover; display: block; margin: auto;" 
+        src="{% if person.image %}{{ person.image.url }} {% else %} {% static 'not-found-user.png' %}{% endif %}" alt="Profile Image">
       </button>
 
       {% comment %} <form action="{%url 'spots:comment_likes' spot.pk comment.pk %}" method="POST">

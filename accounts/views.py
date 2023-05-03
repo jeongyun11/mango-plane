@@ -49,6 +49,7 @@ def signup(request):
     }
     return render(request, 'accounts/signup.html', context)
 
+@login_required
 def profile(request, username):
     User = get_user_model()
     person = User.objects.get(username=username)

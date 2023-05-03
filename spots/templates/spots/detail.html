@@ -65,7 +65,7 @@ none-margin-bottom{
 
 <section class='container' style='max-width: 800px;'>
   <div class='d-flex justify-content-between mt-3'>
-    <h3>{{spot.title}} <span style="color: #FF792A;">4.3</span></h3>
+    <h3>{{spot.title}}  <span style="color: #FF792A;">{{ average_rating }}</span></h3>
     <div class='d-grid gap-2 d-md-flex justify-content-md-end align-items-center'>
       {% if spot.user == user %}
       <a href="{% url 'spots:update_spot' spot.pk %}" class="btn btn-primary me-2 custom-button">
@@ -152,17 +152,17 @@ none-margin-bottom{
     </div>
     <div class="col-2">
       <div class="comment">
-        {% if comment.vote == 'like' %}
+        {% if comment.vote == "5.0" %}
           <div class="d-flex flex-column align-items-center">
             <i class="far fa-laugh-squint EmoticonPicker__Icon EmoticonPicker__Icon--Positive"></i>
             <p class="mb-0" style="color: #ff9008;">좋았다</p>
           </div>
-        {% elif comment.vote == 'soso' %}
+        {% elif comment.vote == "3.0" %}
           <div class="d-flex flex-column align-items-center">
             <i class="far fa-meh EmoticonPicker__Icon EmoticonPicker__Icon--Neutral"></i>
             <p class="mb-0" style="color: #ff9008;">괜찮다</p>
           </div>
-        {% elif comment.vote == 'dislike' %}
+        {% elif comment.vote == "1.0" %}
           <div class="d-flex flex-column align-items-center">
             <i class="far fa-frown EmoticonPicker__Icon EmoticonPicker__Icon--Negative"></i>
             <p class="mb-0" style="color: #ff9008;">나쁘다</p>

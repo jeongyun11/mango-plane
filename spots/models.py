@@ -26,21 +26,28 @@ class Spot(models.Model):
     website = models.URLField(max_length=200, null=True, blank=True)
     latitude = models.FloatField(null=True)
     longitude = models.FloatField(null=True)
+    
+    def calculate_average_rating(self):
+        comments = self.comment_set.all()
+        if not comments:
+            return 0
 
+        total_rating = sum([float(comment.vote) for comment in comments])
+        average_rating = total_rating / len(comments)
+        return round(average_rating, 1)
 
 
 class Comment(models.Model):
     VOTE_CHOICES = (
-        ('like', mark_safe('<i class="far fa-laugh-squint EmoticonPicker__Icon EmoticonPicker__Icon--Neutral"></i> 좋았다')),
-        ('soso', mark_safe('<i class="far fa-meh EmoticonPicker__Icon EmoticonPicker__Icon--Neutral"></i>괜찮다')),
-        ('dislike', mark_safe('<i class="far fa-frown EmoticonPicker__Icon EmoticonPicker__Icon--Neutral"></i>나쁘다')),
+        (5.0, mark_safe('<i class="far fa-laugh-squint EmoticonPicker__Icon EmoticonPicker__Icon--Neutral"></i> 좋았다')),
+        (3.0, mark_safe('<i class="far fa-meh EmoticonPicker__Icon EmoticonPicker__Icon--Neutral"></i>괜찮다')),
+        (1.0, mark_safe('<i class="far fa-frown EmoticonPicker__Icon EmoticonPicker__Icon--Neutral"></i>나쁘다')),
     )
-    vote = models.CharField(max_length=10, choices=VOTE_CHOICES)
+    vote = models.FloatField(choices=VOTE_CHOICES)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_comments')
     article = models.ForeignKey(Spot, on_delete=models.CASCADE)
     content = models.TextField(null=False)
-    vote = models.CharField(max_length=7, choices=VOTE_CHOICES)
     created_at = models.DateTimeField(auto_now_add=True)
 
 class CommentImage(models.Model):

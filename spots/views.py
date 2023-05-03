@@ -1,8 +1,8 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from .models import Spot, Comment
-from .forms import SpotForm, CommentForm
+from .forms import SpotForm, CommentForm, CommentImageFormSet, CommentImage
 from django.contrib.auth import get_user_model
 from django.core.paginator import Paginator
 from django.db.models import Count
@@ -104,17 +104,33 @@ def comment_create(request, spot_pk):
     spot = Spot.objects.get(pk=spot_pk)
 
     if request.method == 'POST':
-        form = CommentForm(request.POST, request.FILES, spot=spot)
-        if form.is_valid():
+        form = CommentForm(request.POST, spot=spot)
+        formset = CommentImageFormSet(request.POST, request.FILES, prefix='commentimage_set')
+
+        if form.is_valid() and formset.is_valid():
             comment = form.save(commit=False)
             comment.article = spot
             comment.user = request.user
             comment.save()
+
+            for image_form in formset:
+                if 'commentimage_set-0-image' in request.FILES:
+                    for img in request.FILES.getlist('commentimage_set-0-image'):
+                        image = CommentImage(comment=comment, image=img)
+                        image.save()
+                    break
+
             return redirect('spots:detail', spot_pk=spot.pk)
     else:
         form = CommentForm(spot=spot)
-    return render(request, 'spots/comment_create.html', {'form': form, 'spot': spot,})
+        formset = CommentImageFormSet(prefix='commentimage_set')
 
+    context = {
+        'form': form,
+        'formset': formset,
+        'spot': spot,
+    }
+    return render(request, 'spots/comment_create.html', context)
 
 @login_required
 def comment_delete(request, spot_pk, comment_pk):

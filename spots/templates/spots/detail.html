@@ -146,11 +146,9 @@ none-margin-bottom{
     <div class="col-8">
       <p style="color: #959595;">{{ comment.created_at|date:"Y-m-d" }}</p>
       <p>{{comment.content}}</p>
-      {% if comment.image %}
-      <div class="mb-3">
-        <img src="{{ comment.image.url }}" alt="{{comment.title}}" class="size">
-      </div>
-      {% endif %}
+      {% for image in comment.images.all %}
+        <img src="{{ image.image.url }}" alt="Comment image" class="size">
+      {% endfor %}
     </div>
     <div class="col-2">
       <div class="comment">
@@ -172,7 +170,7 @@ none-margin-bottom{
         {% endif %}
       </div>
     </div>
-  </div>
+</div>
   <hr>
   <form action=""></form>
 

@@ -139,6 +139,7 @@
           <!-- 탭 컨텐츠 -->
           <div id="tab1" class="tab-content" style="display: block">
             {% if recently_viewed_spots %}
+            <button onclick="clearRecentlyViewed()">Clear Recently Viewed Spots</button>
               {% for spot in recently_viewed_spots %}
                 <a href="{% url 'spots:detail' spot.pk %}">
                   <div class="d-flex align-items-center mb-4">
@@ -226,9 +227,9 @@
           <input class="search-input__text ms-3" placeholder="여행지" name="keyword" id="keyword" style = 'width: 70%' >
           <input class="search-input__submit" type="submit" value="검색" style="width: 100px;">
         </form>
-      {% comment %} <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
-      </button> {% endcomment %}
+      </button>
       <div class="ms-3" id="navbarNav">
         <ul class="navbar-nav">
           <li class="nav-item">
@@ -255,7 +256,6 @@
               <a class="btn btn-outline-dark-subtle mx-2" href="{% url 'accounts:login' %}" role="button">로그인</a>
               <a class="btn btn-outline-dark" href="{% url 'accounts:signup' %}" role="button">회원가입</a>
             {% endif %}
-          </div>
           </li>
         </ul>
       </div>

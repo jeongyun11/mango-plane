@@ -87,6 +87,7 @@
           <!-- 탭 컨텐츠 -->
           <div id="tab1" class="tab-content" style="display: block">
             {% if recently_viewed_spots %}
+            <button onclick="clearRecentlyViewed()">Clear Recently Viewed Spots</button>
               {% for spot in recently_viewed_spots %}
                 <a href="{% url 'spots:detail' spot.pk %}">
                   <div class="d-flex align-items-center mb-4">
@@ -251,6 +252,14 @@
         .then(data => {
           const recentlyViewedSpots = document.querySelector('#recently-viewed-spots');
           recentlyViewedSpots.innerHTML = data;
+        })
+        .catch(error => console.error(error));
+    };
+
+    function clearRecentlyViewed() {
+      fetch('/clear_recently_viewed_spots/')
+        .then(() => {
+          loadRecentlyViewedSpots();
         })
         .catch(error => console.error(error));
     };

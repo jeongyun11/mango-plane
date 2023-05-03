@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-
+from .context_processors import clear_recently_viewed
 app_name = 'spots'
 
 urlpatterns = [
@@ -18,4 +18,5 @@ urlpatterns = [
     path('<int:spot_pk>/likes/',views.likes, name='likes'),
     path('<int:spot_pk>/comments/<int:comment_pk>/likes/',views.comment_likes, name = 'comment_likes'),
     path('search/', views.search, name='search'),
+    path('clear_recently_viewed_spots/', clear_recently_viewed, name='clear_recently_viewed_spots'),
     ]

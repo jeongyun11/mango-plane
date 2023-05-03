@@ -90,28 +90,28 @@
               {% for spot in recently_viewed_spots %}
                 <a href="{% url 'spots:detail' spot.pk %}">
                   <div class="d-flex align-items-center mb-4">
-                    <img src="{% if spot.image %}{{ spot.image.url }}{% endif %}" style="width: 70px; height: 70px; margin-right: 10px " alt="{{ spot.title }}">
+                    <img src="{% if spot.image %}{{ spot.image.url }} {% else %} {% static 'No-Image-Placeholder.svg.png' %}{% endif %}" style="width: 70px; height: 70px; margin-right: 10px " alt="{{ spot.title }}">
                     <p class="ml-5">{{ spot.title }}</p>
                   </div>
                 </a>
               {% endfor %}
             {% else %}
-            <div class = "d-flex flex-column justify-content-center align-items-center">
-              <div style = "height : 140px;"></div>
-              <p class = "text-center" style = "font-size: 22px;">거기가 어디였지?</p>
-              <p class="text-center" style="color: #ff792a; font-size: 14px;">내가 둘러 본 식당이 이 곳에 순서대로 <br>기록됩니다.</p>
-            </div>
+              <div class = "d-flex flex-column justify-content-center align-items-center">
+                <div style = "height : 140px;"></div>
+                <p class = "text-center" style = "font-size: 22px;">거기가 어디였지?</p>
+                <p class="text-center" style="color: #ff792a; font-size: 14px;">내가 둘러 본 식당이 이 곳에 순서대로 <br>기록됩니다.</p>
+              </div>
             {% endif %}
           </div>
           <div id="tab2" class="tab-content">
             {% if liked_spots %}
                 {% for spot in liked_spots %}
-                <a href="{% url 'spots:detail' spot.pk %}">
-                  <div class="d-flex align-items-center mb-4">
-                    <img src="{% if spot.image %}{{ spot.image.url }}{% endif %}" style="width: 70px; height: 70px; margin-right: 10px " alt="{{ spot.title }}">
-                    <p class="ml-5">{{ spot.title }}</p>
-                  </div>
-                </a>
+                  <a href="{% url 'spots:detail' spot.pk %}">
+                    <div class="d-flex align-items-center mb-4">
+                      <img src="{% if spot.image %}{{ spot.image.url }} {% else %} {% static 'No-Image-Placeholder.svg.png' %}{% endif %}" style="width: 70px; height: 70px; margin-right: 10px " alt="{{ spot.title }}">
+                      <p class="ml-5">{{ spot.title }}</p>
+                    </div>
+                  </a>
                 {% endfor %}
             {% else %}
             <div class = "d-flex flex-column justify-content-center align-items-center">
@@ -180,7 +180,7 @@
             <a class="nav-link me-5" href="{% url 'spots:create' %}">작성하기</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link me-5" href="{% url 'accounts:profile' %}">Profile</a>
+            <a class="nav-link me-5" href="{% url 'accounts:profile' user %}">Profile</a>
           </li>
         </ul>
       </div>

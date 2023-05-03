@@ -25,9 +25,8 @@ def recently_viewed(request):
 
     return {'recently_viewed_spots': recently_viewed_spots}
 
-# def clear_recently_viewed(request):
-#     if 'viewed_spots_pks' in request.session:
-#         request.session['viewed_spots_pks'] = []
+def clear_recently_viewed(request):
+    request.session.pop('viewed_spots_pks', None)
 
 
 def spot_search(request):

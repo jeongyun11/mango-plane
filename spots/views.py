@@ -15,7 +15,6 @@ def index(request):
     }
     return render(request, 'spots/index.html', context)
 
-@login_required
 def detail(request, spot_pk):
     spot = Spot.objects.get(pk=spot_pk)
     comments = spot.comment_set.all()

@@ -120,17 +120,17 @@
   <div class="row mt-4">
     <div class="col-2">
       <button type="button" style="width: 70px; height: 70px; padding: 0; box-sizing: border-box;" class="btn btn-lg rounded-circle me-2">
-        <img class="rounded-circle" style="width: 100%; height: 100%; object-fit: cover; display: block; margin: auto;" src="{{ user.image.url }}" alt="Profile Image">
+        <img class="rounded-circle" style="width: 100%; height: 100%; object-fit: cover; display: block; margin: auto;" src="{{ person.image.url }}" alt="Profile Image">
       </button>
 
-      {% comment %} <form action="{%url 'spots:comment_likes' spot.pk comment.pk %}" method="POST">
+        <form action="{%url 'spots:comment_likes' spot.pk comment.pk %}" method="POST">
         {% csrf_token %}
         {% if request.user in comment.like_users.all %}
         <input type="submit" value="좋아요 취소">
         {% else %}
         <input type="submit" value="좋아요">
         {% endif %}
-      </form> {% endcomment %}
+      </form>
       {% if comment.user == user %}
       <form action="{% url 'spots:comment_delete' spot.pk comment.pk %}" method="POST">
         {% csrf_token %}
@@ -141,11 +141,7 @@
     <div class="col-8">
       <p style="color: #959595;">{{ comment.created_at|date:"Y-m-d" }}</p>
       <p>{{comment.content}}</p>
-      {% if comment.image %}
-      <div class="mb-3">
-        <img src="{{ comment.image.url }}" alt="{{comment.title}}" class="size">
-      </div>
-      {% endif %}
+
     </div>
     <div class="col-2">
       <div class="comment">

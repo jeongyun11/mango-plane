@@ -50,18 +50,7 @@
 
 {% block content %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
-
-<div class="container text-center my-5">
-  <form action="{% url 'spots:search' %}" class="search">
-    <label class="search-label" for="keyword">
-      <i class="fas fa-search search-label__icon" style="color: #d4d4d4;">d</i>
-    </label>
-    <input class="search-input__text" placeholder="여행지" name="keyword" id="keyword">
-    <input class="search-input__submit" type="submit" value="검색">
-  </form>
-</div>
-
-<div>
+<div class="container m-5">
   <h2 class="search-result">{{ keyword }}의 검색결과</h2>
   <div class="d-inline-flex row w-50 ">
     {% for spot in page_obj %}

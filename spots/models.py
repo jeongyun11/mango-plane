@@ -24,6 +24,8 @@ class Spot(models.Model):
     business_hours = models.CharField(max_length=50)
     holiday =  models.DateField()
     website = models.URLField(max_length=200, null=True, blank=True)
+    latitude = models.FloatField(null=True)
+    longitude = models.FloatField(null=True)
 
 
 class Comment(models.Model):

@@ -56,6 +56,9 @@ def create(request):
         if form.is_valid():
             spot = form.save(commit=False)
             spot.user = request.user
+            print(request.POST.get("latitude"), request.POST.get("longitude"))
+            spot.latitude = request.POST.get("latitude")
+            spot.longitude = request.POST.get("longitude")
             spot.save()
             return redirect('spots:detail', spot_pk=spot.pk)
 
@@ -86,7 +89,7 @@ def update_spot(request, pk):
         'form': form,
         'spot': spot,
     }
-    return render(request, 'update_spot.html', context)
+    return render(request, 'spots/update_spot.html', context)
 
 @login_required
 def delete(request, pk):
@@ -143,14 +146,12 @@ def comment_likes(request, spot_pk, comment_pk):
 def search(request):
     keyword = request.GET.get('keyword')
     spots = Spot.objects.filter(title__contains = keyword) # SELECT ... FROM ... LIKE '%<keyword>%'
-    print(len(spots))
     len_element = 2
     paginator = Paginator(spots, len_element)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     len_page = (len(spots) + 1) // len_element
     pages = range(1, len_page + 1)
-    print(pages)
     context = {
         'page_obj': page_obj,
         'keyword': keyword,

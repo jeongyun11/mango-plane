@@ -27,6 +27,19 @@
     justify-content: center;
     align-items: center;
   }
+
+  .profile--followbtn {
+    width: 150px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    margin-bottom: 10px;
+  }
+
+  .followbtnBox {
+    display: flex;
+    justify-content: space-evenly;
+  }
 {% endblock style %}
 {% block content %}
 <div class="modal fade" id="followersModal" tabindex="-1" aria-labelledby="followersModalLabel" aria-hidden="true">
@@ -124,7 +137,7 @@
         </form>
       </div>
       {% endif %}
-      <div>
+      <div class="followbtnBox">
         <button type="button" class="profile--followbtn" data-bs-toggle="modal" data-bs-target="#followersModal">
           <span id="followers-count">{{ person.followers.all|length }}</span> 팔로워
         </button>

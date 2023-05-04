@@ -56,13 +56,9 @@
 .custom-button {
   height: 38px;
 }
-
 none-margin-bottom{
   margin-bottom: 0px;
 }
-
-
-<!-- detail 상단 사진 style -->
 
 .image-container {
   display: flex;
@@ -74,6 +70,7 @@ none-margin-bottom{
   width: 400px;
   height: 340px;
 }
+
 .scroll-button {
   position: absolute;
   top: 50%;
@@ -89,14 +86,11 @@ none-margin-bottom{
   right: 0;
 }
 
-<!-- detail 상단 사진 style -->
 {% endblock style %}
 
 {% block content %}
 <!-- 이모티콘 link -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
-
-<!-- detail 상단 사진  -->
 
 <div style="position: relative;">
   <div class="image-container" id="imageContainer">
@@ -118,8 +112,6 @@ none-margin-bottom{
     imageContainer.scrollLeft += scrollAmount * direction;
   }
 </script>
-
-<!-- detail 상단 사진  -->
 
 <section class='container' style='max-width: 800px;'>
   <div class='d-flex justify-content-between mt-3'>

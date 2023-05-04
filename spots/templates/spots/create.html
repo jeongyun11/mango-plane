@@ -1,26 +1,69 @@
 {% extends 'base.html' %}
-
 {% block style %}
-  <style>
-    .wid {
-      width: 500px;
-    }
 
-    p {
-      display: grid;
-      grid-template-columns: 1fr auto;
-    }
+  body {
+    background-color: #F5F5F5;
+  }
 
-    p span {
-      grid-column: 1 / -1;
-    }
-  </style>
+  h3 {
+    color: #FF6F00;
+    font-weight: bold;
+    font-size: 2.5rem;
+  }
+
+  .wid {
+    width: 800px;
+    margin: 0 auto;
+    background-color: #FFFFFF;
+    border: 1px solid #E5E5E5;
+    border-radius: 10px;
+    padding: 30px 50px;
+  }
+
+  .mt-5 {
+    margin-top: 3rem !important;
+  }
+
+  .mb-4 {
+    margin-bottom: 2rem !important;
+  }
+
+  hr {
+    border: none;
+    height: 1px;
+    background-color: #E5E5E5;
+    margin: 1rem 0;
+  }
+
+  .btn {
+    color: #FFFFFF;
+    background-color: #c6c6c6;
+    border-color: #c6c6c6;
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+
+  .btn:hover {
+    color: #FFFFFF;
+    background-color: #FF6F00;
+    border-color: #FF6F00;
+  }
+
+  p {
+    display: grid;
+    grid-template-columns: 1fr auto;
+  }
+
+  p span {
+    grid-column: 1 / -1;
+  }
+
 {% endblock style %}
 
 {% block content %}
 <div class="wid">
   <form action="{% url 'spots:create' %}" method="POST" enctype="multipart/form-data" style="width: 500px" class="mx-auto m-5 mb-3">
-    <h3>CREATE</h3>
+    <h3>작성하기</h3>
     <div class='mt-5 mb-4'>
       {% csrf_token %}
       {% for field in form %}

@@ -110,9 +110,10 @@ class CommentForm(forms.ModelForm):
         }),
     )
     vote = forms.ChoiceField(
-        label='평점',
+        label='',
         choices=Comment.VOTE_CHOICES,
         widget=forms.RadioSelect(attrs={
+            'class': 'emojiFlex',
             'style': 'display: none;',
             'onclick': "var radio = document.getElementsByName('vote');\
                         for (var i=0; i<radio.length; i++) {\

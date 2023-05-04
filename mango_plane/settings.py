@@ -68,7 +68,7 @@ TEMPLATES = [
                 'spots.context_processors.liked_spots',
                 'spots.context_processors.recently_viewed',
                 'spots.context_processors.spot_search',
-                # 'spots.context_processors.clear_recently_viewed',
+                # 'spots.context_processors.likes',
             ],
         },
     },

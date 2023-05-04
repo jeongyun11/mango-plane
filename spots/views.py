@@ -8,7 +8,7 @@ from django.core.paginator import Paginator
 from django.db.models import Count
 from django.views.decorators.http import require_POST
 from django.http import HttpResponse
-
+from django.http import JsonResponse
 
 def index(request):
     spots = Spot.objects.order_by('-pk')
@@ -109,7 +109,7 @@ def comment_create(request, spot_pk):
     spot = Spot.objects.get(pk=spot_pk)
 
     if request.method == 'POST':
-        form = CommentForm(request.POST, spot=spot)
+        form = CommentForm(request.POST, spot=spot, request=request)
         formset = CommentImageFormSet(request.POST, request.FILES, prefix='commentimage_set')
 
         if form.is_valid() and formset.is_valid():
@@ -127,7 +127,7 @@ def comment_create(request, spot_pk):
 
             return redirect('spots:detail', spot_pk=spot.pk)
     else:
-        form = CommentForm(spot=spot)
+        form = CommentForm(spot=spot, request=request)
         formset = CommentImageFormSet(prefix='commentimage_set')
 
     context = {
@@ -145,14 +145,20 @@ def comment_delete(request, spot_pk, comment_pk):
 
     return redirect('spots:detail', spot_pk)
 
+
 @login_required
 def likes(request, spot_pk):
-    spot =  Spot.objects.get(pk=spot_pk)
+    spot = Spot.objects.get(pk=spot_pk)
     if request.user in spot.like_users.all():
         spot.like_users.remove(request.user)
+        liked = False
     else:
         spot.like_users.add(request.user)
-    return redirect('spots:detail', spot_pk)
+        liked = True
+    data = {
+        'liked': liked,
+    }
+    return JsonResponse(data)
 
 @login_required
 def comment_likes(request, spot_pk, comment_pk):

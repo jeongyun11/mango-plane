@@ -75,6 +75,8 @@ none-margin-bottom{
           {% csrf_token %}
           <input type="submit" value="삭제" class="btn btn-danger custom-button">
         </form>
+      {% else %}
+      {% endif %}
     
         <div class="d-flex flex-column align-items-center text-center review-write">
           <a href="{% url 'spots:comment_create' spot_pk=spot.pk %}" role="button" class="review-write-link" onclick="event.preventDefault(); writeReview(this);">
@@ -83,7 +85,7 @@ none-margin-bottom{
           </a>
         </div>
     
-        <form action="{% url 'spots:likes' spot.pk %}" method="POST">
+        <form class="like-form" method="POST" action="{% url 'spots:likes' spot.pk %}">
           {% csrf_token %}
           <div class="d-flex flex-column align-items-center like-spot">
             <button type="submit" class="btn btn-link p-0 Icon custom-button">
@@ -92,8 +94,7 @@ none-margin-bottom{
             <p class="mb-0 like-spot-text {% if request.user in spot.like_users.all %}active{% endif %}">가고싶다</p>
           </div>
         </form>
-      {% else %}
-      {% endif %}
+    
     </div>
     
   </div>
@@ -121,28 +122,21 @@ none-margin-bottom{
 
 
     {% for comment in comments %}
-  <div class="row mt-4">
-    <div class="col-2">
-      <button type="button" style="width: 70px; height: 70px; padding: 0; box-sizing: border-box;" class="btn btn-lg rounded-circle me-2">
-        <img class="rounded-circle" style="width: 100%; height: 100%; object-fit: cover; display: block; margin: auto;" 
-        src="{% if person.image %}{{ person.image.url }} {% else %} {% static 'not-found-user.png' %}{% endif %}" alt="Profile Image">
-      </button>
-
-      {% comment %} <form action="{%url 'spots:comment_likes' spot.pk comment.pk %}" method="POST">
-        {% csrf_token %}
-        {% if request.user in comment.like_users.all %}
-        <input type="submit" value="좋아요 취소">
-        {% else %}
-        <input type="submit" value="좋아요">
+    <div class="row mt-4">
+      <div class="col-2" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+        <a href="{% url 'accounts:profile' comment.user %}">
+          <button type="button" style="width: 70px; height: 70px; padding: 0; box-sizing: border-box;" class="btn btn-lg rounded-circle me-2">
+            <img class="rounded-circle" style="width: 100%; height: 100%; object-fit: cover; display: block; margin: auto;" src="{% if comment.user.image %}{{ comment.user.image.url }}{% else %}{% static 'not-found-user.png' %}{% endif %}" alt="Profile Image">
+          </button>
+          <p>{{ comment.user }}</p>
+        </a>
+        {% if comment.user == user %}
+        <form action="{% url 'spots:comment_delete' spot.pk comment.pk %}" method="POST">
+          {% csrf_token %}
+          <input type="submit" value="댓글 삭제">
+        </form>
         {% endif %}
-      </form> {% endcomment %}
-      {% if comment.user == user %}
-      <form action="{% url 'spots:comment_delete' spot.pk comment.pk %}" method="POST">
-        {% csrf_token %}
-        <input type="submit" value="댓글 삭제">
-      </form>
-      {% endif %}
-    </div>
+      </div>
     <div class="col-8">
       <p style="color: #959595;">{{ comment.created_at|date:"Y-m-d" }}</p>
       <p>{{comment.content}}</p>
@@ -181,7 +175,7 @@ none-margin-bottom{
     </section>
 
   <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b31017d4e781b285ff64fd6b844340e9"></script>
-
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
     var lat = {{ spot.latitude }} 
     var lng = {{ spot.longitude }}
@@ -215,6 +209,41 @@ none-margin-bottom{
 
     // 아래 코드는 지도 위의 마커를 제거하는 코드입니다
     // marker.setMap(null);    
+
+    $(document).ready(function() {
+      // When the like-form is submitted
+      $('.like-form').submit(function(event) {
+        // Prevent the form from submitting through HTTP
+        event.preventDefault();
+    
+        // Get the form action and method
+        var url = $(this).attr('action');
+        var method = $(this).attr('method');
+    
+        // Send an AJAX request
+        $.ajax({
+          url: url,
+          method: method,
+          data: $(this).serialize(),  // Serialize the form data
+          success: function(response) {
+            // Update the like button icon and text
+            var icon = $('.like-spot-icon', $(event.target));
+            var text = $('.like-spot-text', $(event.target));
+            if (icon.hasClass('active')) {
+              icon.removeClass('active');
+              text.removeClass('active');
+            } else {
+              icon.addClass('active');
+              text.addClass('active');
+            }
+          },
+          error: function(xhr, status, error) {
+            // Handle the error
+            console.error(xhr.responseText);
+          }
+        });
+      });
+    });
   </script>
 {% endblock content %}
       

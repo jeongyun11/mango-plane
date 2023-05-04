@@ -68,11 +68,45 @@
       color: orange;
       border-bottom: 2px solid orange;
     }
+    .modal-body {
+      padding: 5px;
+      
+    }
     #clearbutton {
       border: none;
       background-color: transparent;
       color: #dbdbdb;
-      float: right;
+      margin-left: auto;
+      font-size: 10px;
+      line-height: 19px;
+    }
+    .like-spot-icon {
+      color: #959595;
+    }
+    
+    .like-spot:hover .like-spot-icon,
+    .like-spot-icon.active {
+      color: #ff9008;
+    }
+    
+    .like-spot-text {
+      color: #959595;
+    }
+    
+    .like-spot:hover .like-spot-text,
+    .like-spot-text.active {
+      color: #ff9008;
+    }
+    .custom-button {
+      height: 38px;
+    }
+    #modallikebutton {
+      margin-right: 10px;
+      margin-bottom: 5px;
+    }
+
+    #modalstar{
+      font-size: 20px;
     }
 
   {%block style%}
@@ -92,16 +126,27 @@
           <!-- 탭 컨텐츠 -->
           <div id="tab1" class="tab-content" style="display: block">
             {% if recently_viewed_spots %}
-            <div style = "width : 100%">
-              <button onclick="deleteRecentlyViewedSpots()" id = "clearbutton"> x clear all</button>
+            <div class="d-flex justify-content-end">
+              <button onclick="deleteRecentlyViewedSpots()" id="clearbutton">x clear all</button>
             </div>
+              
               {% for spot in recently_viewed_spots %}
-                <a href="{% url 'spots:detail' spot.pk %}">
-                  <div class="d-flex align-items-center mb-4">
-                    <img src="{% if spot.image %}{{ spot.image.url }} {% else %} {% static 'No-Image-Placeholder.svg.png' %}{% endif %}" style="width: 70px; height: 70px; margin-right: 10px " alt="{{ spot.title }}">
-                    <p class="ml-5">{{ spot.title }}</p>
+                
+                  <div class="d-flex align-items-center justify-content-between mb-4">
+                    <a href="{% url 'spots:detail' spot.pk %}">
+                      <div class="d-flex align-items-center">
+                        <img src="{% if spot.image %}{{ spot.image.url }} {% else %} {% static 'No-Image-Placeholder.svg.png' %}{% endif %}" style="width: 70px; height: 70px; margin-right: 10px " alt="{{ spot.title }}">
+                        <p class="ml-5">{{ spot.title }}</p>
+                      </div>
+                    </a>
+
+                    <form class="like-form" method="POST" action="{% url 'spots:likes' spot.pk %}">
+                      {% csrf_token %}
+                        <button type="submit" class="btn btn-link p-0 Icon custom-button" id="modallikebutton">
+                          <i class="fas fa-star like-spot-icon {% if request.user in spot.like_users.all %}active{% endif %}" id = "modalstar"></i>
+                        </button>
+                    </form>
                   </div>
-                </a>
               {% endfor %}
             {% else %}
               <div class = "d-flex flex-column justify-content-center align-items-center">
@@ -111,6 +156,7 @@
               </div>
             {% endif %}
           </div>
+
           <div id="tab2" class="tab-content">
             {% if liked_spots %}
                 {% for spot in liked_spots %}
@@ -210,7 +256,8 @@
   </nav>
   {%block content%}
   {%endblock content%}
-
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
 		// 탭을 열기 위한 함수
     function openTab(evt, tabName) {
@@ -294,7 +341,42 @@
       }
       return cookieValue;
     }
+
+    $(document).ready(function() {
+      // When the like-form is submitted
+      $('.like-form').submit(function(event) {
+        // Prevent the form from submitting through HTTP
+        event.preventDefault();
+    
+        // Get the form action and method
+        var url = $(this).attr('action');
+        var method = $(this).attr('method');
+    
+        // Send an AJAX request
+        $.ajax({
+          url: url,
+          method: method,
+          data: $(this).serialize(),  // Serialize the form data
+          success: function(response) {
+            // Update the like button icon and text
+            var icon = $('.like-spot-icon', $(event.target));
+            var text = $('.like-spot-text', $(event.target));
+            if (icon.hasClass('active')) {
+              icon.removeClass('active');
+              text.removeClass('active');
+            } else {
+              icon.addClass('active');
+              text.addClass('active');
+            }
+          },
+          error: function(xhr, status, error) {
+            // Handle the error
+            console.error(xhr.responseText);
+          }
+        });
+      });
+    });
 	</script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+  
 </body>
 </html>

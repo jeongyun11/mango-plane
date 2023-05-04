@@ -54,7 +54,7 @@
   color: #ff9008;
 }
 .custom-button {
-  height: 38px;
+
 }
 none-margin-bottom{
   margin-bottom: 0px;
@@ -64,11 +64,13 @@ none-margin-bottom{
   display: flex;
   overflow-x: scroll;
   gap: 16px;
+  width: 100%;
+  height: 400px; /* 이미지가 가로 방향으로 스크롤되는 부모 요소의 높이를 지정합니다 */
 }
 
 .fixed-width-img {
-  width: 400px;
-  height: 340px;
+  width: 100%;
+  height: 100%;
 }
 
 .scroll-button {
@@ -76,6 +78,7 @@ none-margin-bottom{
   top: 50%;
   transform: translateY(-50%);
   z-index: 1;
+  font-size: 3em;
 }
 
 .scroll-left {
@@ -86,6 +89,23 @@ none-margin-bottom{
   right: 0;
 }
 
+.background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+}
+
+.text {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  margin-top: 200px;
+}
+
 {% endblock style %}
 
 {% block content %}
@@ -94,14 +114,21 @@ none-margin-bottom{
 
 <div style="position: relative;">
   <div class="image-container" id="imageContainer">
-    {% for comment in comments %}
-      {% for image in comment.images.all %}
-        <img src="{{ image.image.url }}" class="fixed-width-img" alt="Comment image">
+    {% if comments|length > 0 %}
+      {% for comment in comments %}
+        {% for image in comment.images.all %}
+          <img src="{{ image.image.url }}" class="fixed-width-img" alt="Comment image">
+        {% endfor %}
       {% endfor %}
-    {% endfor %}
+      <i class="fas fa-chevron-left scroll-button scroll-left" onclick="scrollImageContainer(-1)"></i>
+      <i class="fas fa-chevron-right scroll-button scroll-right" onclick="scrollImageContainer(1)"></i>
+    {% else %}
+    <div class="container">
+      <img src="{% static 'headerimg.jpg' %}" alt="Header image" class="background-image">
+      <h3 class="text" style="color: white;">이미지가 없습니다. 리뷰를 작성하고 사진을 올려주세요!</h3>
+    </div>
+    {% endif %}
   </div>
-  <button class="scroll-button scroll-left" onclick="scrollImageContainer(-1)"><i class="fas fa-chevron-left"></i></button>
-  <button class="scroll-button scroll-right" onclick="scrollImageContainer(1)"><i class="fas fa-chevron-right"></i></button>
 </div>
 
 <script>
@@ -114,25 +141,23 @@ none-margin-bottom{
 </script>
 
 <section class='container' style='max-width: 800px;'>
-  <div class='d-flex justify-content-between mt-3'>
-    <h3>{{spot.title}}  <span style="color: #FF792A;">{{ average_rating }}</span></h3>
+  <div class='d-flex justify-content-between mt-5'>
+    <h3>{{spot.title}} <span style="color: #FF792A;">{{ average_rating }}</span></h3>
     <div class='d-grid gap-2 d-md-flex justify-content-md-end align-items-center'>
       {% if spot.user == user %}
-      <a href="{% url 'spots:update_spot' spot.pk %}" class="btn btn-primary me-2 custom-button">
-        <span>수정</span>
-      </a>
+        <a href="{% url 'spots:update_spot' spot.pk %}" class="btn btn-primary me-2 custom-button">
+          <span>수정</span>
+        </a>
         <form action="{% url 'spots:delete' spot.pk %}" method="POST" class="d-inline-block">
           {% csrf_token %}
           <input type="submit" value="삭제" class="btn btn-danger custom-button">
         </form>
-    
         <div class="d-flex flex-column align-items-center text-center review-write">
           <a href="{% url 'spots:comment_create' spot_pk=spot.pk %}" role="button" class="review-write-link" onclick="event.preventDefault(); writeReview(this);">
-            <i class="fas fa-pencil-alt Icon review-write-icon custom-button mn-n2"></i>
-            <p class="mb-0 mt-0 review-write-text">리뷰쓰기</p>
+            <i class="fas fa-pencil-alt Icon review-write-icon custom-button mt-2 mn-n2"></i>
+            <p class="mt-2 mb-0 review-write-text">리뷰쓰기</p>
           </a>
         </div>
-    
         <form action="{% url 'spots:likes' spot.pk %}" method="POST">
           {% csrf_token %}
           <div class="d-flex flex-column align-items-center like-spot">
@@ -145,8 +170,8 @@ none-margin-bottom{
       {% else %}
       {% endif %}
     </div>
-    
   </div>
+  
     <hr>
     <p style="color: #959595;">주소: {{ spot.address }}</p>
     <p style="color: #959595;">전화번호: {{ spot.phone_number }}</p>
@@ -186,39 +211,39 @@ none-margin-bottom{
         <input type="submit" value="좋아요">
         {% endif %}
       </form> {% endcomment %}
+    </div>
+    <div class="col-8">
+      <p style="color: #959595;">{{ comment.created_at|date:"Y-m-d" }}</p>
+      <p>{{comment.content}}</p>
+      {% comment %} {% for image in comment.images.all %}
+      <img src="{{ image.image.url }}" alt="Comment image" class="size">
+      {% endfor %} {% endcomment %}
+    </div>
+    <div class="col-2">
+      <div class="comment">
+        {% if comment.vote == "5.0" %}
+        <div class="d-flex flex-column align-items-center">
+          <i class="far fa-laugh-squint EmoticonPicker__Icon EmoticonPicker__Icon--Positive"></i>
+          <p class="mb-0" style="color: #ff9008;">좋았다</p>
+        </div>
+        {% elif comment.vote == "3.0" %}
+        <div class="d-flex flex-column align-items-center">
+          <i class="far fa-meh EmoticonPicker__Icon EmoticonPicker__Icon--Neutral"></i>
+          <p class="mb-0" style="color: #ff9008;">괜찮다</p>
+        </div>
+        {% elif comment.vote == "1.0" %}
+        <div class="d-flex flex-column align-items-center">
+          <i class="far fa-frown EmoticonPicker__Icon EmoticonPicker__Icon--Negative"></i>
+          <p class="mb-0" style="color: #ff9008;">나쁘다</p>
+        </div>
+        {% endif %}
+      </div>
       {% if comment.user == user %}
       <form action="{% url 'spots:comment_delete' spot.pk comment.pk %}" method="POST">
         {% csrf_token %}
         <input type="submit" value="댓글 삭제">
       </form>
       {% endif %}
-    </div>
-    <div class="col-8">
-      <p style="color: #959595;">{{ comment.created_at|date:"Y-m-d" }}</p>
-      <p>{{comment.content}}</p>
-      {% comment %} {% for image in comment.images.all %}
-        <img src="{{ image.image.url }}" alt="Comment image" class="size">
-      {% endfor %} {% endcomment %}
-    </div>
-    <div class="col-2">
-      <div class="comment">
-        {% if comment.vote == "5.0" %}
-          <div class="d-flex flex-column align-items-center">
-            <i class="far fa-laugh-squint EmoticonPicker__Icon EmoticonPicker__Icon--Positive"></i>
-            <p class="mb-0" style="color: #ff9008;">좋았다</p>
-          </div>
-        {% elif comment.vote == "3.0" %}
-          <div class="d-flex flex-column align-items-center">
-            <i class="far fa-meh EmoticonPicker__Icon EmoticonPicker__Icon--Neutral"></i>
-            <p class="mb-0" style="color: #ff9008;">괜찮다</p>
-          </div>
-        {% elif comment.vote == "1.0" %}
-          <div class="d-flex flex-column align-items-center">
-            <i class="far fa-frown EmoticonPicker__Icon EmoticonPicker__Icon--Negative"></i>
-            <p class="mb-0" style="color: #ff9008;">나쁘다</p>
-          </div>
-        {% endif %}
-      </div>
     </div>
 </div>
   <hr>

@@ -130,7 +130,7 @@ class CommentForm(forms.ModelForm):
 
     class Meta:
         model = Comment
-        fields = ('content', 'vote')  # 'image'를 제거합니다.
+        fields = ('vote', 'content')  # 'image'를 제거합니다.
 
     def __init__(self, *args, **kwargs):
         spot = kwargs.pop('spot')  # spot 인자를 받아옵니다.

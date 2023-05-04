@@ -1,7 +1,7 @@
 from django import forms
 from .models import Spot, Comment, CommentImage
 from django.forms import formset_factory
-
+from django.contrib.auth import get_user_model
 
 class SpotForm(forms.ModelForm):
     title = forms.CharField(
@@ -133,9 +133,12 @@ class CommentForm(forms.ModelForm):
         fields = ('vote', 'content')  # 'image'를 제거합니다.
 
     def __init__(self, *args, **kwargs):
+        request = kwargs.pop('request', None)
         spot = kwargs.pop('spot')  # spot 인자를 받아옵니다.
+        self.request = kwargs.pop('request', None)
         super().__init__(*args, **kwargs)
-        self.fields['content'].widget.attrs['placeholder'] = f"{spot.user}님, 이번 여행은 어떠셨나요? 여행지의 분위기와 후기가 궁금해요!"
+        if self.request:
+            self.fields['content'].widget.attrs['placeholder'] = f"{self.request.user}님, 이번 여행은 어떠셨나요? 여행지의 분위기와 후기가 궁금해요!"
     
     def clean_vote(self):
         vote = self.cleaned_data.get('vote')

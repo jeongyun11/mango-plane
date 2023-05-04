@@ -6,6 +6,8 @@ from .forms import SpotForm, CommentForm, CommentImageFormSet, CommentImage
 from django.contrib.auth import get_user_model
 from django.core.paginator import Paginator
 from django.db.models import Count
+from django.views.decorators.http import require_POST
+from django.http import HttpResponse
 
 
 def index(request):
@@ -173,3 +175,8 @@ def search(request):
         'pages': pages,
     }
     return render(request, 'spots/search.html', context)
+
+@require_POST
+def delete_recently_viewed_spots(request):
+    request.session['viewed_spots_pks'] = []
+    return HttpResponse('')

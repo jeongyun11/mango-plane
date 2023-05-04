@@ -23,7 +23,7 @@ def recently_viewed(request):
             viewed_spots_pks.append(spot_pk)
             request.session['viewed_spots_pks'] = viewed_spots_pks
 
-    return {'recently_viewed_spots': recently_viewed_spots}
+    return {'recently_viewed_spots': recently_viewed_spots, 'viewed_spots_pks': viewed_spots_pks}
 
 def clear_recently_viewed(request):
     request.session.pop('viewed_spots_pks', None)

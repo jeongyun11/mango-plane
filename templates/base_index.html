@@ -68,7 +68,12 @@
       color: orange;
       border-bottom: 2px solid orange;
     }
-
+    #clearbutton {
+      border: none;
+      background-color: transparent;
+      color: #dbdbdb;
+      float: right;
+    }
 
   {%block style%}
   {%endblock style%}
@@ -87,7 +92,9 @@
           <!-- 탭 컨텐츠 -->
           <div id="tab1" class="tab-content" style="display: block">
             {% if recently_viewed_spots %}
-            <button onclick="clearRecentlyViewed()">Clear Recently Viewed Spots</button>
+            <div style = "width : 100%">
+              <button onclick="deleteRecentlyViewedSpots()" id = "clearbutton"> x clear all</button>
+            </div>
               {% for spot in recently_viewed_spots %}
                 <a href="{% url 'spots:detail' spot.pk %}">
                   <div class="d-flex align-items-center mb-4">
@@ -256,13 +263,37 @@
         .catch(error => console.error(error));
     };
 
-    function clearRecentlyViewed() {
-      fetch('/clear_recently_viewed_spots/')
-        .then(() => {
-          loadRecentlyViewedSpots();
+    function deleteRecentlyViewedSpots() {
+      const csrftoken = getCookie('csrftoken');
+      fetch('/spots/delete_recently_viewed_spots/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrftoken
+        },
+        body: JSON.stringify({})
+      })
+        .then(response => {
+          const recentlyViewedSpots = document.querySelector('#recently-viewed-spots');
+          recentlyViewedSpots.innerHTML = '';
         })
         .catch(error => console.error(error));
-    };
+    }
+    
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
 	</script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
 </body>

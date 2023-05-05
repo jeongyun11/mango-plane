@@ -18,4 +18,5 @@ urlpatterns = [
     path('<int:spot_pk>/comments/<int:comment_pk>/likes/',views.comment_likes, name = 'comment_likes'),
     path('search/', views.search, name='search'),
     path('delete_recently_viewed_spots/', views.delete_recently_viewed_spots, name='delete_recently_viewed_spots'),
+    path('city/', views.city, name='city'),
     ]

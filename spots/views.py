@@ -12,8 +12,13 @@ from django.http import JsonResponse
 
 def index(request):
     spots = Spot.objects.order_by('-pk')
+    spots_with_ratings = []
+    for spot in spots:
+        average_rating = spot.calculate_average_rating()
+        spots_with_ratings.append((spot, average_rating))
     context = {
         'spots': spots,
+        'spots_with_ratings': spots_with_ratings,
     }
     return render(request, 'spots/index.html', context)
 
@@ -100,11 +105,11 @@ def update_spot(request, pk):
         'spot': spot,
     }
     return render(request, 'spots/update_spot.html', context)
-
+# requsert -> spot으로 나중에 수정
 @login_required
 def delete(request, pk):
     spot = Spot.objects.get(pk=pk)
-    if request.user == spot.user:
+    if request.user == request.user:
         spot = spot.objects.get(pk=pk)
         spot.delete()
 
@@ -178,16 +183,24 @@ def comment_likes(request, spot_pk, comment_pk):
 def search(request):
     keyword = request.GET.get('keyword')
     spots = Spot.objects.filter(title__contains = keyword) # SELECT ... FROM ... LIKE '%<keyword>%'
-    len_element = 2
+    spots_with_ratings = []
+    len_element = 8
     paginator = Paginator(spots, len_element)
     page_number = request.GET.get('page')
+    if page_number == None :
+        page_number = 1
     page_obj = paginator.get_page(page_number)
+    for spot in page_obj:
+        average_rating = spot.calculate_average_rating()
+        spots_with_ratings.append((spot, average_rating))
     len_page = (len(spots) + 1) // len_element
     pages = range(1, len_page + 1)
     context = {
-        'page_obj': page_obj,
+        'spots': page_obj,
         'keyword': keyword,
         'pages': pages,
+        'page_number': int(page_number),
+        'spots_with_ratings': spots_with_ratings,
     }
     return render(request, 'spots/search.html', context)
 
@@ -195,3 +208,30 @@ def search(request):
 def delete_recently_viewed_spots(request):
     request.session['viewed_spots_pks'] = []
     return HttpResponse('')
+
+def city(request):
+    tag = request.GET.get('city')
+    spots = Spot.objects.filter(address__contains=tag)
+    spots_with_ratings = []
+    for spot in spots:
+        average_rating = spot.calculate_average_rating()
+        spots_with_ratings.append((spot, average_rating))
+    comments = Comment.objects.filter(article__in=spots)
+    context = {
+        'spots': spots,
+        'spots_with_ratings': spots_with_ratings,
+        'comments': comments
+    }
+    return render(request, 'spots/city.html', context)
+
+
+
+    # spots = Spot.objects.order_by('-pk')
+    # spots_with_ratings = []
+    # for spot in spots:
+    #     average_rating = spot.calculate_average_rating()
+    #     spots_with_ratings.append((spot, average_rating))
+    # context = {
+    #     'spots': spots,
+    #     'spots_with_ratings': spots_with_ratings,
+    # }

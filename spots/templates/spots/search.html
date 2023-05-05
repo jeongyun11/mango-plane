@@ -2,6 +2,10 @@
 {% load static %}
 
 {% block style %}
+  .container {
+    text-align: center;
+  }
+
   a {
     text-decoration: none;
   }
@@ -40,45 +44,95 @@
 
 .search-result {
   color: orange;
+  margin-bottom: 30px;
 }
 
 .pages{
   position: inline-block;
+  margin-right: 10px;
 }
 
+.pages-container {
+  display: flex;
+  justify-content: center; /* 가운데 정렬을 원하면 추가 */
+}
+
+.spot-image {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+}
+
+input[type="submit"] {
+  background-color: transparent;
+  border: none;
+  color: lightgray;
+  cursor: pointer;
+  font-size: inherit;
+  padding: 0;
+}
+
+.card {
+    border: none;
+    padding: 0px;
+  }
+.card-text {
+  margin-bottom: 5px;
+  font-size: 15px;
+  font-weight: 200;
+  margin-bottom: 0px;
+}
+.card_title{
+  font-size: 23px;
+  font-weight: 600;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
 {% endblock style %}
 
 {% block content %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
 <div class="container m-5">
-  <h2 class="search-result">{{ keyword }}의 검색결과</h2>
-  <div class="d-inline-flex row w-50 ">
-    {% for spot in page_obj %}
-      <div class="col-md-6" >
-        <a href="{% url 'spots:detail' spot.pk %}">
-          <div class="card border-white">
-            {% if spot.image %}
-            <img src="{{spot.image.url}}" alt="{{spot.title}}">
-            {% else %}
-            <img src="{% static 'No-Image-Placeholder.svg.png' %}" alt="image">
-            {% endif %}
-            
-            <div class="card-body">
-              <p class="card=text">{{spot.title}}</p>
+  {% if keyword == '' %}
+    <h2 class="search-result">전체 검색결과</h2>
+  {% else %}
+    <h2 class="search-result">{{ keyword }}의 검색결과</h2>
+  {% endif %}
+  <div class="row g-4 col-12">
+        {% for spot, average_rating in spots_with_ratings %}
+            <div class="col-3">
+                <a href="{% url 'spots:detail' spot.pk %}">
+                    <div class="card">
+                      <div class="spot-image-container">
+                        {% if spot.image %}
+                            <img src="{{ spot.image.url }}" class="card-img-top rounded-2 spot-image" alt="image">
+                        {% else %}
+                            <img src="{% static 'No-Image-Placeholder.svg.png' %}" class="card-img-top spot-image" alt="image">
+                        {% endif %}
+                      </div>
+                        <div class="card-body p-0">
+                            <p>{{spot.title}} <span style="color: #FF792A;">{{ average_rating }}</span></p>
+                        </div>
+                    </div>
+                </a>
             </div>
-          </div>
-        </a>
-      </div>
-    {% endfor %}
-  </div>
-  <div>
-    {% for page in pages %}
-    <form action="{% url 'spots:search' %}" method="GET" class="pages">
-      <input type="hidden" name="page" value="{{ page }}">
-      <input type="hidden" name="keyword" value="{{ keyword }}">
+
+        {% empty %}
+            <p>아직 등록된 여행지가 없어요.</p>
+        {% endfor %}
+    </div>
+  <div class="pages-container">
+  {% for page in pages %}
+  <form action="{% url 'spots:search' %}" method="GET" class="pages">
+    <input type="hidden" name="page" value="{{ page }}">
+    <input type="hidden" name="keyword" value="{{ keyword }}">
+    {% if page == page_number %}
+      <p>{{ page }}</p>
+    {% else %}
       <input type="submit" value="{{ page }}">
-    </form>
-    {% endfor %}
-  </div> 
+    {% endif %}
+  </form>
+  {% endfor %}
+</div>
 </div>
 {% endblock content %}

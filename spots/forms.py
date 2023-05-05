@@ -23,18 +23,17 @@ class SpotForm(forms.ModelForm):
             }
         ),
     )
-    address = forms.CharField(
-        label='주소',
-        widget=forms.TextInput(
+    category = forms.CharField(
+        label='카테고리',
+        widget=forms.Textarea(
             attrs={
                 'class': 'form-control',
-                'style' : 'width: 250px',
+                'style': 'width: 250px',
             }
         ),
     )
-    phone_number = forms.CharField(
-        label='전화번호',
-        empty_value='전화번호를 입력해주세요',
+    address = forms.CharField(
+        label='주소',
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control',
@@ -60,25 +59,6 @@ class SpotForm(forms.ModelForm):
             }
         ),
     )
-    business_hours = forms.CharField(
-        label='영업시간',
-        widget=forms.TextInput(
-            attrs={
-                'class': 'form-control',
-                'style' : 'width: 250px',
-            }
-        ),
-    )
-    holiday = forms.DateField(
-        label='휴무일',
-        widget=forms.DateInput(
-            attrs={
-                'class': 'form-control',
-                'type': 'date',
-                'style' : 'width: 250px',
-            }
-        ),
-    )
     website = forms.URLField(
         label='웹사이트',
         required=False,
@@ -92,10 +72,10 @@ class SpotForm(forms.ModelForm):
 
     class Meta:
         model = Spot
-        fields = ('title', 'content', 'image', 'category', 'address', 'phone_number', 'price_range', 'parking', 'business_hours', 'holiday', 'website',)
+        fields = ('title', 'content', 'image', 'category', 'address', 'price_range', 'parking', 'website',)
         labels = {
             'image': '이미지',
-            'category': '카테고리',
+
         }
 
 

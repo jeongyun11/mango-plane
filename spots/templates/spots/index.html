@@ -51,17 +51,17 @@
   }
 
   .bestcategory {
-    background-image: url('/static/category.jpeg');
+    background-image: url('/static/lotte.jpeg');
     background-size: cover;
   }
 
   .bestReview {
-    background-image: url('/static/bestreview.png');
+    background-image: url('/static/busan.jpg');
     background-size: cover;
   }
 
   .bestUser {
-    background-image: url('/static/bestuser.jpeg');
+    background-image: url('/static/jeju.jpg');
     background-size: cover;
   }
 
@@ -141,7 +141,15 @@
   .search-label__icon {
     font-size: 24px;
   }
-
+.spot-image {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+}
+.city-button {
+  border: none;
+  background-color: white;
+}
 {% endblock style %}
 {% block content %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
@@ -160,58 +168,75 @@
       </form>
     </div>
   </header>
-  <section>
-  <div class="container text-center" style = "height : 2000px">
+  
+  <section class="mb-5">
+    <div class="container text-center">
       <div class="contentTitle row title">
-        <h2>믿고 보는 여행지 리스트</h2>
+        <h2 style="color: #FF792A;">믿고 보는 여행지 리스트</h2>
         <a class="listButton" href="#"><span>리스트 더보기</span></a>
 
       </div>
       <div class="contentBox row">
         <div class="col">
-          <div class="bestcategory content">
-            <p>카테고리별 추천 여행지</p>
-            <p>"없는 컨셉은 없다. 이번 여행지는?"</p>
-          </div>
+        <form action="{% url 'spots:city' %}" method='GET'>
+          <button id="city" name="city" value="서울" style="border: none; background-color: white;" class="city-button">
+            <div class="bestcategory content">
+              <p>SEOUL</p>
+            </div>
+          </button>
+        </form>
         </div>
+
         <div class="col">
-          <div class="bestReview content">
-            <p>베스트 리뷰 20곳</p>
-            <p>"모든 사용자가 극찬한 이곳!"</p>
-          </div>
+        <form action="{% url 'spots:city' %}" method='GET'>
+          <button id="city" name="city" value="부산" style="border: none; background-color: white;" class="city-button">
+            <div class="bestReview content">
+              <p>BUSAN</p>
+            </div>
+          </button>
+        </form>
         </div>
+
         <div class="col">
-          <div class="bestUser content">
-            <p>사용자별 추천 여행지</p>
-            <p>"한 달에 3회 이상, 여행러들의 선택~"</p>
-          </div>
+        <form action="{% url 'spots:city' %}" method='GET'>
+          <button id="city" name="city" value="제주" style="border: none; background-color: white;" class="city-button">
+            <div class="bestUser content">
+              <p>JEJU</p>
+            </div>
+          </button>
+        </form>
         </div>
+        
       </div>
     </div>
   </section>
+  <hr>
   <!--카드-->
-  <div class="container mt-4" >
-      <div class="row g-4">
-        {% for spot in spots %}
-            <div class="col-md-4">
-              <a href="{% url 'spots:detail' spot.pk %}">
-                <div class="card">
-                  {% if spot.image %}
-                    <img src="{{ spot.image.url }}" class="card-img-top rounded-2"  alt="image">
-                  {% else %}
-                    <img src="{% static 'No-Image-Placeholder.svg.png' %}" class="card-img-top" alt="image">
-                  {% endif %}
-                  <div class="card-body p-0">
-                    <p class="card-text">{{spot.title}}</p>
-                    <p class="card-text">작성자: {{spot.user}}</p> 
-                  </div>
-                </div>
-              </a>
+  <div class="container text-center mt-5">
+    <h3 style="color: #FF792A; margin-bottom: 30px;">에디터가 선정한 여행지</h3>
+    <div class="row g-4 col-12">
+        {% for spot, average_rating in spots_with_ratings %}
+            <div class="col-3">
+                <a href="{% url 'spots:detail' spot.pk %}">
+                    <div class="card">
+                      <div class="spot-image-container">
+                        {% if spot.image %}
+                            <img src="{{ spot.image.url }}" class="card-img-top rounded-2 spot-image" alt="image">
+                        {% else %}
+                            <img src="{% static 'No-Image-Placeholder.svg.png' %}" class="card-img-top spot-image" alt="image">
+                        {% endif %}
+                      </div>
+                        <div class="card-body p-0">
+                            <p>{{spot.title}} <span style="color: #FF792A;">{{ average_rating }}</span></p>
+                        </div>
+                    </div>
+                </a>
             </div>
+
         {% empty %}
-        <p>아직 리뷰가 없어요.</p>
+            <p>아직 등록된 여행지가 없어요.</p>
         {% endfor %}
-      </div>
+    </div>
   </div>
   <footer>
     <p>Copyright &copy; 2023 
@@ -220,4 +245,3 @@
     </p>
   </footer>
 {% endblock content %}
-

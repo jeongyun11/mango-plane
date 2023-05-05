@@ -53,9 +53,6 @@
 .like-spot-text.active {
   color: #ff9008;
 }
-.custom-button {
-
-}
 none-margin-bottom{
   margin-bottom: 0px;
 }
@@ -66,11 +63,6 @@ none-margin-bottom{
   gap: 16px;
   width: 100%;
   height: 400px; /* 이미지가 가로 방향으로 스크롤되는 부모 요소의 높이를 지정합니다 */
-}
-
-.fixed-width-img {
-  width: 100%;
-  height: 100%;
 }
 
 .scroll-button {
@@ -113,6 +105,12 @@ none-margin-bottom{
 .removeButton:hover {
   color: black;
 }
+.card {
+  border: none;
+  padding: 0px;
+  width: 400px;
+  height: 400px;
+}
 
 {% endblock style %}
 
@@ -125,7 +123,11 @@ none-margin-bottom{
     {% if image_exists %}
       {% for comment in comments %}
         {% for image in comment.images.all %}
-          <img src="{{ image.image.url }}" class="fixed-width-img" alt="Comment image">
+        <div class="card">
+          <div class="spot-image-container">
+            <img src="{{ image.image.url }}" class="fixed-width-img" alt="Comment image">
+          </div>
+        </div>
         {% endfor %}
       {% endfor %}
       <i class="fas fa-chevron-left scroll-button scroll-left" onclick="scrollImageContainer(-1)"></i>
@@ -180,19 +182,18 @@ none-margin-bottom{
             <p class="mt-2 mb-0 like-spot-text {% if request.user in spot.like_users.all %}active{% endif %}">가고싶다</p>
           </div>
         </form>
-    
+        
+      </div>
     </div>
-  </div>
-  
+    
     <hr>
+    <p style="color: #959595;">{{ spot.content }}</p>
     <p style="color: #959595;">주소: {{ spot.address }}</p>
-    <p style="color: #959595;">전화번호: {{ spot.phone_number }}</p>
+    <p style="color: #959595;">카테고리: {{ spot.category }}</p>
     <p style="color: #959595;">가격대: {{ spot.price_range }}</p>
     <p style="color: #959595;">주차: {% if spot.parking %} 가능 {% else %} 불가능 {% endif %}</p>
-    <p style="color: #959595;">영업시간: {{ spot.business_hours }}</p>
-    <p style="color: #959595;">휴무일: {{ spot.holiday }}</p>
     {% if spot.website %}
-      <p style="color: #959595;">웹사이트: <a href="{{ spot.website }}" style="color: black;">여행지 홈페이지로 가기</a></p>
+    <p style="color: #959595;">웹사이트: <a href="{{ spot.website }}" style="color: black;">여행지 홈페이지로 가기</a></p>
     {% endif %}
     <div id="map" style="width:100%;height:350px;"></div>
     <hr>
@@ -221,9 +222,6 @@ none-margin-bottom{
     <div class="col-8">
       <p style="color: #959595;">{{ comment.created_at|date:"Y-m-d" }}</p>
       <p>{{comment.content}}</p>
-      {% comment %} {% for image in comment.images.all %}
-      <img src="{{ image.image.url }}" alt="Comment image" class="size">
-      {% endfor %} {% endcomment %}
     </div>
     <div class="col-2">
       <div class="comment">

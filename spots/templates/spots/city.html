@@ -1,0 +1,181 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block style %}
+button {
+    border: none;
+    background-color: white;
+    padding: 0;
+}
+
+.EmoticonPicker__Icon {
+  font-size: 44px;
+  margin: 8px;
+  color: #ff9008;
+}
+.Icon {
+  font-size: 30px;
+  
+}
+.Icon:hover .fas {
+  color: #ff9008;
+}
+.like-spot-icon {
+  color: #959595;
+}
+
+.like-spot:hover .like-spot-icon,
+.like-spot-icon.active {
+  color: #ff9008;
+}
+
+.like-spot-text {
+  color: #959595;
+}
+
+.like-spot:hover .like-spot-text,
+.like-spot-text.active {
+  color: #ff9008;
+}
+.title {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 200px;
+    background-color: #f7f7f7;
+    border-bottom: 1px solid #dbdbdb;
+}
+
+.title p {
+    color: #9b9b9b;
+}
+
+section {
+    display: flex;
+    width: 800px;
+    margin: 0 auto;
+    padding-top: 30px;
+}
+.spot-image {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+}
+
+.photoBox {
+    width: 300px;
+    height: 300px;
+}
+
+.textBox {
+    display: flex;
+    flex-direction: column;
+    margin-left: 30px;
+    flex-grow: 1;
+    width: 400px;
+}
+.description {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+{% endblock style %}
+
+{% block content %}
+
+<header>
+  <div class="title">
+    <h2>망고플레인 에디터가 추천하는 여행 코스</h2>
+    <p>여긴 꼭 가야해!!</p>
+  </div>
+</header>
+
+{% for spot, average_rating in spots_with_ratings %}
+<section>
+<div class="photoBox">
+  <div class="card">
+    <div class="spot-image-container">
+      {% if spot.image %}
+      <img src="{{ spot.image.url }}" class="card-img-top rounded-2 spot-image" alt="image">
+      {% else %}
+      <img src="{% static 'No-Image-Placeholder.svg.png' %}" class="card-img-top spot-image" alt="image">
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<div class="textBox">
+  <form action="{% url 'spots:detail' spot.pk%}">
+    <button><h3><span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ spot.title }}</span> <span style="color: #FF792A;">{{ average_rating }}</span></h3></button>
+  </form>
+  <p style="color: #9b9b9b;">{{ spot.address }}</p>
+
+
+  <div style="display: flex; justify-content text-align: center;">
+    <a href="{% url 'accounts:profile' spot.user %}">
+      <button type="button" style="width: 50px; height: 50px; padding: 0; box-sizing: border-box;" class="btn btn-lg rounded-circle me-2">
+        <img class="rounded-circle" style="width: 100%; height: 100%; object-fit: cover; display: block; margin: auto;" src="{% if spot.user.image %}{{ spot.user.image.url }}{% else %}{% static 'not-found-user.png' %}{% endif %}" alt="Profile Image">
+      </button>
+      <p>{{ spot.user }}</p>
+    </a>
+    {% for comment in comments %}
+    {% if comment.article == spot and comment.user == spot.user %}
+      <p class="description">{{ comment.content }}</p>
+    {% endif %}
+  {% endfor %}
+  </div>
+  
+</div>
+<form class="like-form" method="POST" action="{% url 'spots:likes' spot.pk %}">
+  {% csrf_token %}
+  <div class="d-flex flex-column align-items-center like-spot">
+    <button type="submit" class="btn btn-link p-0 Icon" data-spot-pk="{{ spot.pk }}">
+      <i class="fas fa-star like-spot-icon {% if request.user in spot.like_users.all %}active{% endif %}"></i>
+    </button>
+    <p class="mt-2 mb-0 like-spot-text {% if request.user in spot.like_users.all %}active{% endif %}">가고싶다</p>
+  </div>
+</form>
+</section>
+{% endfor %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const likeButtons = document.querySelectorAll('.like-form button');
+
+    likeButtons.forEach((button) => {
+      button.addEventListener('click', async (event) => {
+        event.preventDefault();
+
+        const spotPk = button.dataset.spotPk;
+        const response = await fetch(`/spots/${spotPk}/likes/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+          },
+          body: JSON.stringify({}),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+
+          if (data.liked) {
+            button.querySelector('.like-spot-icon').classList.add('active');
+            button.nextElementSibling.classList.add('active');
+          } else {
+            button.querySelector('.like-spot-icon').classList.remove('active');
+            button.nextElementSibling.classList.remove('active');
+          }
+        }
+      });
+    });
+  });
+</script>
+
+
+
+
+
+{% endblock content %}

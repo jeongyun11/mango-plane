@@ -105,11 +105,10 @@ none-margin-bottom{
 .removeButton:hover {
   color: black;
 }
-.card {
-  border: none;
-  padding: 0px;
+.fixed-width-img {
   width: 400px;
   height: 400px;
+  object-fit: cover;
 }
 
 {% endblock style %}
@@ -123,8 +122,8 @@ none-margin-bottom{
     {% if image_exists %}
       {% for comment in comments %}
         {% for image in comment.images.all %}
-        <div class="card">
-          <div class="spot-image-container">
+        <div>
+          <div class="">
             <img src="{{ image.image.url }}" class="fixed-width-img" alt="Comment image">
           </div>
         </div>

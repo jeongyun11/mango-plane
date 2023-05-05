@@ -1,0 +1,62 @@
+[
+{
+    "model": "accounts.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$260000$iISwzi373iwAs07f5ZiRPI$fzOCdniQVmUAJXBM5VjkagVxrbdhscnKutm5Wf77Hbc=",
+        "last_login": "2023-05-05T03:30:28.078Z",
+        "is_superuser": false,
+        "username": "admin",
+        "first_name": "harry",
+        "last_name": "kim",
+        "email": "seo5719@worksout.co.kr",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2023-05-05T03:30:27.978Z",
+        "image": "",
+        "groups": [],
+        "user_permissions": [],
+        "followings": []
+    }
+},
+{
+    "model": "accounts.user",
+    "pk": 2,
+    "fields": {
+        "password": "pbkdf2_sha256$260000$LY1UK219gPv6rUfRFJ1Ttx$JhINquxrr4wNgZRiLv0wfT0C3sMHl7tJ0x44RSS1P5A=",
+        "last_login": "2023-05-05T06:03:00.341Z",
+        "is_superuser": false,
+        "username": "kimfield",
+        "first_name": "초원",
+        "last_name": "김",
+        "email": "kimfield98@naver.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2023-05-05T03:36:57.227Z",
+        "image": "users/초원.jpg",
+        "groups": [],
+        "user_permissions": [],
+        "followings": []
+    }
+},
+{
+    "model": "accounts.user",
+    "pk": 3,
+    "fields": {
+        "password": "pbkdf2_sha256$260000$s0z8JcmMNuryNqxjyooAab$i2irJnO5TxRat9dzBV5/f37DB5xRZuoTh+XShGgjM4c=",
+        "last_login": "2023-05-05T07:45:30.691Z",
+        "is_superuser": false,
+        "username": "uwn1004",
+        "first_name": "윤원",
+        "last_name": "정",
+        "email": "uwn1004@gmail.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2023-05-05T04:00:21.549Z",
+        "image": "",
+        "groups": [],
+        "user_permissions": [],
+        "followings": []
+    }
+}
+]

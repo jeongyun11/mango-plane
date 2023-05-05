@@ -1,0 +1,62 @@
+[
+{
+    "model": "spots.comment",
+    "pk": 5,
+    "fields": {
+        "vote": 5.0,
+        "user": 1,
+        "article": 1,
+        "content": "ㅇㅇㄴ암낭;ㅣㅁ나이;ㅏ민아;미낭;ㅣㅁ나이;망;ㅣㅏ미낭마니;ㅏ임ㄴ;ㅏ이;ㅁ나이;ㄴ",
+        "created_at": "2023-05-05T08:32:00.552Z",
+        "like_users": []
+    }
+},
+{
+    "model": "spots.comment",
+    "pk": 6,
+    "fields": {
+        "vote": 5.0,
+        "user": 2,
+        "article": 1,
+        "content": "아이고 이거 지짜 끝나긴할랑가 모르겠네 아이고 이거 지짜 끝나긴할랑가 모르겠네 아이고 이거 지짜 끝나긴할랑가 모르겠네 아이고 이거 지짜 끝나긴할랑가 모르겠네 아이고 이거 지짜 끝나긴할랑가 모르겠네 아이고 이거 지짜 끝나긴할랑가 모르겠네 아이고 이거 지짜 끝나긴할랑가 모르겠네 아이고 이거 지짜 끝나긴할랑가 모르겠네",
+        "created_at": "2023-05-05T08:46:09.965Z",
+        "like_users": []
+    }
+},
+{
+    "model": "spots.comment",
+    "pk": 8,
+    "fields": {
+        "vote": 5.0,
+        "user": 3,
+        "article": 35,
+        "content": "책이 맛있고 커피가 재밌어요!",
+        "created_at": "2023-05-05T08:47:00.318Z",
+        "like_users": []
+    }
+},
+{
+    "model": "spots.comment",
+    "pk": 9,
+    "fields": {
+        "vote": 1.0,
+        "user": 3,
+        "article": 30,
+        "content": "힘들어요",
+        "created_at": "2023-05-05T08:49:02.483Z",
+        "like_users": []
+    }
+},
+{
+    "model": "spots.comment",
+    "pk": 12,
+    "fields": {
+        "vote": 5.0,
+        "user": 1,
+        "article": 1,
+        "content": "ㅇㅇ",
+        "created_at": "2023-05-05T09:01:30.270Z",
+        "like_users": []
+    }
+}
+]

@@ -28,6 +28,8 @@ def detail(request, spot_pk):
 
     average_rating = spot.calculate_average_rating()
 
+    image_exists = any(comment.images.exists() for comment in comments)
+
     if request.method == 'POST':
         comment_form = CommentForm(request.POST, request.FILES, spot=spot)
         if comment_form.is_valid():
@@ -38,6 +40,7 @@ def detail(request, spot_pk):
             return redirect('spots:detail', spot_pk=spot.pk)
     else:
         comment_form = CommentForm(spot=spot)
+    
     context = {
         'spot': spot,
         'comments': comments,
@@ -47,8 +50,11 @@ def detail(request, spot_pk):
         'dislike_count': dislike_count,
         'soso_count': soso_count,
         'average_rating': average_rating,
+        'image_exists': image_exists,
     }
+    
     return render(request, 'spots/detail.html', context)
+
 
 
 

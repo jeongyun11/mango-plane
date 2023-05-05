@@ -105,6 +105,15 @@ none-margin-bottom{
   text-align: center;
   margin-top: 200px;
 }
+
+.removeButton{
+  color: black;
+}
+
+.removeButton:hover {
+  color: black;
+}
+
 {% endblock style %}
 
 {% block content %}
@@ -113,7 +122,7 @@ none-margin-bottom{
 
 <div style="position: relative;">
   <div class="image-container" id="imageContainer">
-    {% if comments|length > 0 %}
+    {% if image_exists %}
       {% for comment in comments %}
         {% for image in comment.images.all %}
           <img src="{{ image.image.url }}" class="fixed-width-img" alt="Comment image">
@@ -122,10 +131,10 @@ none-margin-bottom{
       <i class="fas fa-chevron-left scroll-button scroll-left" onclick="scrollImageContainer(-1)"></i>
       <i class="fas fa-chevron-right scroll-button scroll-right" onclick="scrollImageContainer(1)"></i>
     {% else %}
-    <div class="container">
-      <img src="{% static 'headerimg.jpg' %}" alt="Header image" class="background-image">
-      <h3 class="text" style="color: white;">이미지가 없습니다. 리뷰를 작성하고 사진을 올려주세요!</h3>
-    </div>
+      <div class="container">
+        <img src="{% static 'headerimg.jpg' %}" alt="Header image" class="background-image">
+        <h3 class="text" style="color: white;">이미지가 없습니다. 리뷰를 작성하고 사진을 올려주세요!</h3>
+      </div>
     {% endif %}
   </div>
 </div>
@@ -157,7 +166,7 @@ none-margin-bottom{
         <div class="d-flex flex-column align-items-center text-center review-write">
           <a href="{% url 'spots:comment_create' spot_pk=spot.pk %}" role="button" class="review-write-link" onclick="event.preventDefault(); writeReview(this);">
             <i class="fas fa-pencil-alt Icon review-write-icon custom-button mt-2 mn-n2"></i>
-            <p class="mt-2 mb-0 review-write-text">리뷰쓰기</p>
+            <p class="mb-0 review-write-text">리뷰쓰기</p>
           </a>
         </div>
         
@@ -168,7 +177,7 @@ none-margin-bottom{
             <button type="submit" class="btn btn-link p-0 Icon custom-button">
               <i class="fas fa-star like-spot-icon {% if request.user in spot.like_users.all %}active{% endif %}"></i>
             </button>
-            <p class="mb-0 like-spot-text {% if request.user in spot.like_users.all %}active{% endif %}">가고싶다</p>
+            <p class="mt-2 mb-0 like-spot-text {% if request.user in spot.like_users.all %}active{% endif %}">가고싶다</p>
           </div>
         </form>
     
@@ -207,12 +216,6 @@ none-margin-bottom{
           </button>
           <p>{{ comment.user }}</p>
         </a>
-        {% if comment.user == user %}
-        <form action="{% url 'spots:comment_delete' spot.pk comment.pk %}" method="POST">
-          {% csrf_token %}
-          <input type="submit" value="댓글 삭제">
-        </form>
-        {% endif %}
       </div>
 
     <div class="col-8">
@@ -242,11 +245,15 @@ none-margin-bottom{
         {% endif %}
       </div>
       {% if comment.user == user %}
-      <form action="{% url 'spots:comment_delete' spot.pk comment.pk %}" method="POST">
-        {% csrf_token %}
-        <i class="fas fa-eraser" type="submit"></i>
-      </form>
-      {% endif %}
+      <div class="d-flex justify-content-end">
+        <form action="{% url 'spots:comment_delete' spot.pk comment.pk %}" method="POST">
+          {% csrf_token %}
+          <button type="submit" class="removeButton btn btn-link p-0">
+            <i class="fas fa-eraser"></i>
+          </button>
+        </form>
+      </div>
+    {% endif %}
     </div>
 </div>
   <hr>

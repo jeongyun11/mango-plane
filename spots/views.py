@@ -71,9 +71,6 @@ def create(request):
         if form.is_valid():
             spot = form.save(commit=False)
             spot.user = request.user
-            print(request.POST.get("latitude"), request.POST.get("longitude"))
-            spot.latitude = request.POST.get("latitude")
-            spot.longitude = request.POST.get("longitude")
             spot.save()
             return redirect('spots:detail', spot_pk=spot.pk)
 

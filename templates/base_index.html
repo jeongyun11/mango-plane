@@ -109,6 +109,11 @@
       font-size: 20px;
     }
 
+    .scrollable-div {
+      overflow: auto;
+    }
+
+
   {%block style%}
   {%endblock style%}
   </style>
@@ -119,10 +124,10 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <button style = "width : 50%; height : 50px; color : #9b9b9b;" onclick="openTab(event, 'tab1')" id = "defaultOpen">최근 본 맛집</button>
+          <button style = "width : 50%; height : 50px; color : #9b9b9b;" onclick="openTab(event, 'tab1')" id = "defaultOpen">최근 본 여행지</button>
           <button style = "width : 50%; height : 50px; color : #9b9b9b; " onclick="openTab(event, 'tab2')">가고싶다</button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body scrollable-div">
           <!-- 탭 컨텐츠 -->
           <div id="tab1" class="tab-content" style="display: block">
             {% if recently_viewed_spots %}

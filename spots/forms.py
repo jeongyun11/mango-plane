@@ -25,7 +25,7 @@ class SpotForm(forms.ModelForm):
     )
     category = forms.CharField(
         label='카테고리',
-        widget=forms.Textarea(
+        widget=forms.TextInput(
             attrs={
                 'class': 'form-control',
                 'style': 'width: 250px',

@@ -105,7 +105,8 @@ def update_spot(request, pk):
         'spot': spot,
     }
     return render(request, 'spots/update_spot.html', context)
-# requsert -> spot으로 나중에 수정
+# requsert -> spot으로 나중에 
+
 @login_required
 def delete(request, pk):
     spot = Spot.objects.get(pk=pk)

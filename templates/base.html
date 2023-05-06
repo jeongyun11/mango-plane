@@ -25,7 +25,7 @@
       display: none;
     }
     .nav {
-      position : fixed-top;
+      position : fixed;
       top: 0;
       left: 0;
       width:100%;
@@ -111,7 +111,7 @@
     }
     #modallikebutton {
       margin-right: 10px;
-      margin-bottom: 5px;
+      margin-bottom: 35px;
     }
 
     #modalstar{
@@ -180,6 +180,13 @@
       height: 38px;
     }
     
+    #modalstar{
+      font-size: 20px;
+    }
+
+    .scrollable-div {
+      overflow: auto;
+    }
 
   {%block style%}
   {%endblock style%}
@@ -192,32 +199,34 @@
     <div class="modal-dialog modal-dialog_base">
       <div class="modal-content">
         <div class="modal-header">
-          <button style = "width : 50%; height : 50px; color : #9b9b9b;" onclick="openTab(event, 'tab1')" id = "defaultOpen">최근 본 맛집</button>
+          <button style = "width : 50%; height : 50px; color : #9b9b9b;" onclick="openTab(event, 'tab1')" id = "defaultOpen">최근 본 여행지</button>
           <button style = "width : 50%; height : 50px; color : #9b9b9b; " onclick="openTab(event, 'tab2')">가고싶다</button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body scrollable-div">
           <!-- 탭 컨텐츠 -->
           <div id="tab1" class="tab-content" style="display: block">
             {% if recently_viewed_spots %}
             <div class="d-flex justify-content-end">
               <button onclick="deleteRecentlyViewedSpots()" id="clearbutton">x clear all</button>
             </div>
-              {% for spot in recently_viewed_spots %}
-                <div class="d-flex align-items-center justify-content-between mb-4">
-                  <a href="{% url 'spots:detail' spot.pk %}">
-                    <div class="d-flex align-items-center">
-                      <img src="{% if spot.image %}{{ spot.image.url }} {% else %} {% static 'No-Image-Placeholder.svg.png' %}{% endif %}" style="width: 70px; height: 70px; margin-right: 10px " alt="{{ spot.title }}">
-                      <p class="ml-5">{{ spot.title }}</p>
-                    </div>
-                  </a>
 
-                  <form class="like-form" method="POST" action="{% url 'spots:likes' spot.pk %}">
-                    {% csrf_token %}
-                      <button type="submit" class="btn btn-link p-0 Icon custom-button" id="modallikebutton">
-                        <i class="fas fa-star like-spot-icon {% if request.user in spot.like_users.all %}active{% endif %}" id = "modalstar"></i>
-                      </button>
-                  </form>
-                </div>
+                {% for spot in recently_viewed_spots %}
+                
+                  <div class="d-flex align-items-center justify-content-between mb-4">
+                    <a href="{% url 'spots:detail' spot.pk %}">
+                      <div class="d-flex align-items-center">
+                        <img src="{% if spot.image %}{{ spot.image.url }} {% else %} {% static 'No-Image-Placeholder.svg.png' %}{% endif %}" style="width: 70px; height: 70px; margin-right: 10px " alt="{{ spot.title }}">
+                        <p class="ml-5">{{ spot.title }}</p>
+                      </div>
+                    </a>
+
+                    <form class="like-form" method="POST" action="{% url 'spots:likes' spot.pk %}">
+                      {% csrf_token %}
+                        <button type="submit" class="btn btn-link p-0 Icon custom-button" id="modallikebutton">
+                          <i class="fas fa-star like-spot-icon {% if request.user in spot.like_users.all %}active{% endif %}" id = "modalstar"></i>
+                        </button>
+                    </form>
+                  </div>
               {% endfor %}
             {% else %}
             <div class = "d-flex flex-column justify-content-center align-items-center">
@@ -333,6 +342,8 @@
 
         
   </nav>
+
+  <div style = 'height : 86.63px'></div>
   {%block content%}
   {%endblock content%}
   {% block script %}

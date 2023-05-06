@@ -38,6 +38,7 @@ class SpotForm(forms.ModelForm):
             attrs={
                 'class': 'form-control',
                 'style' : 'width: 250px',
+                'id' : 'address_kakao',
             }
         ),
     )
@@ -47,6 +48,7 @@ class SpotForm(forms.ModelForm):
             attrs={
                 'class': 'form-control',
                 'style' : 'width: 250px',
+                'name' : 'charge',
             }
         ),
     )

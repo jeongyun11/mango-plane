@@ -73,52 +73,67 @@
       </div>
       <hr>
       {% endfor %}
-      <div id="map" style="width:100%;height:350px;"></div>
-      <p><em>지도를 클릭해주세요!</em></p> 
-      <div id="clickLatlng"></div>
 
-      <input type="hidden" name="latitude" id="latitude">
-      <input type="hidden" name="longitude" id="longitude">
-      <button class="create_btn btn-outline-secondary d-block w-100 mt-4" type="submit">글 작성</button>
+      <div id="map" style="width:300px;height:300px;margin-top:10px;display:none"></div>
+      <button class="btn btn-outline-secondary d-block w-100 mt-4" type="submit">글 작성</button>
     </div>
   </form>
 </div>
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b31017d4e781b285ff64fd6b844340e9"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b31017d4e781b285ff64fd6b844340e9&libraries=services"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script>
-var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
-    mapOption = { 
-        center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
-        level: 3 // 지도의 확대 레벨
-    };
+  
+  var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+        mapOption = {
+            center: new daum.maps.LatLng(37.537187, 127.005476), // 지도의 중심좌표
+            level: 5 // 지도의 확대 레벨
+        };
 
-var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+    //지도를 미리 생성
+    var map = new daum.maps.Map(mapContainer, mapOption);
+    //주소-좌표 변환 객체를 생성
+    var geocoder = new daum.maps.services.Geocoder();
+    //마커를 미리 생성
+    var marker = new daum.maps.Marker({
+        position: new daum.maps.LatLng(37.537187, 127.005476),
+        map: map
+    });
+  
+  function search() {
+    //카카오 지도 발생
+    new daum.Postcode({
+      oncomplete: function(data) {
+          var addr = data.address; // 최종 주소 변수
 
-// 지도를 클릭한 위치에 표출할 마커입니다
-var marker = new kakao.maps.Marker({ 
-    // 지도 중심좌표에 마커를 생성합니다 
-    position: map.getCenter() 
-}); 
-// 지도에 마커를 표시합니다
-marker.setMap(map);
+          // 주소 정보를 해당 필드에 넣는다.
+          document.getElementById("address_kakao").value = addr;
+          // 주소로 상세 정보를 검색
+          geocoder.addressSearch(data.address, function(results, status) {
+              // 정상적으로 검색이 완료됐으면
+              if (status === daum.maps.services.Status.OK) {
 
-// 지도에 클릭 이벤트를 등록합니다
-// 지도를 클릭하면 마지막 파라미터로 넘어온 함수를 호출합니다
-kakao.maps.event.addListener(map, 'click', function(mouseEvent) {        
+                  var result = results[0]; //첫번째 결과의 값을 활용
+
+                  // 해당 주소에 대한 좌표를 받아서
+                  var coords = new daum.maps.LatLng(result.y, result.x);
+                  // 지도를 보여준다.
+                  mapContainer.style.display = "block";
+                  map.relayout();
+                  // 지도 중심을 변경한다.
+                  map.setCenter(coords);
+                  // 마커를 결과값으로 받은 위치로 옮긴다.
+                  marker.setPosition(coords)
+              }
+          });
+      }
+    }).open();
+  }  
     
-    // 클릭한 위도, 경도 정보를 가져옵니다 
-    var latlng = mouseEvent.latLng; 
-    
-    // 마커 위치를 클릭한 위치로 옮깁니다
-    marker.setPosition(latlng);
-    
-    var message = '클릭한 위치의 위도는 ' + latlng.getLat() + ' 이고, ';
-    message += '경도는 ' + latlng.getLng() + ' 입니다';
-    
-    var resultDiv = document.getElementById('clickLatlng'); 
-    resultDiv.innerHTML = message;
-    
-    document.querySelector("#latitude").value = latlng.getLat();
-    document.querySelector("#longitude").value = latlng.getLng();
-});
+  window.onload = function(){
+    document.getElementById("address_kakao").addEventListener("keydown", search)
+    document.getElementById("address_kakao").addEventListener("click", search)
+  }
+  
+
 </script>
 {% endblock content %}

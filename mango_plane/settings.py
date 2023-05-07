@@ -30,7 +30,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 KAKAO_SCRIPT_KEY = os.getenv('KAKAO_SCRIPT_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['port-0-mango-plane-5x7y2mlhd02r7n.sel4.cloudtype.app']
 

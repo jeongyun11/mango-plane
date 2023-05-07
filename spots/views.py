@@ -9,7 +9,7 @@ from django.db.models import Count
 from django.views.decorators.http import require_POST
 from django.http import HttpResponse
 from django.http import JsonResponse
-
+import os
 def index(request):
     spots = Spot.objects.order_by('-pk')
     spots_with_ratings = []
@@ -26,7 +26,7 @@ def detail(request, spot_pk):
     spot = Spot.objects.get(pk=spot_pk)
     comments = spot.comment_set.all()
     comment_count = comments.count()
-
+    KAKAO_SCRIPT_KEY = os.getenv('KAKAO_SCRIPT_KEY')
     like_count = spot.comment_set.filter(vote=5.0).count()
     soso_count = spot.comment_set.filter(vote=3.0).count()
     dislike_count = spot.comment_set.filter(vote=1.0).count()
@@ -56,6 +56,7 @@ def detail(request, spot_pk):
         'soso_count': soso_count,
         'average_rating': average_rating,
         'image_exists': image_exists,
+        'KAKAO_SCRIPT_KEY':KAKAO_SCRIPT_KEY,
     }
     
     return render(request, 'spots/detail.html', context)
@@ -205,7 +206,7 @@ def search(request):
 @require_POST
 def delete_recently_viewed_spots(request):
     request.session['viewed_spots_pks'] = []
-    return HttpResponse('')
+    return JsonResponse({}, status=200)
 
 def city(request):
     tag = request.GET.get('city')

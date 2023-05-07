@@ -274,75 +274,21 @@ none-margin-bottom{
   {% endfor %}
     </section>
     
-  <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey={{ KAKAO_SCRIPT_KEY }}&libraries=services"></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script>
-    function writeReview(link) {
-      link.querySelector('.review-write-text').style.color = 'orange';
-      link.querySelector('.review-write-icon').style.color = 'orange';
-      window.location.href = link.href;
-    }
-    
-    var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
-    mapOption = {
-        center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
-        level: 6 // 지도의 확대 레벨
-    };  
-
-// 지도를 생성합니다    
-var map = new kakao.maps.Map(mapContainer, mapOption); 
-
-// 주소-좌표 변환 객체를 생성합니다
-var geocoder = new kakao.maps.services.Geocoder();
-
-// 주소로 좌표를 검색합니다
-geocoder.addressSearch('{{ spot.address }}', function(result, status) {
-
-    // 정상적으로 검색이 완료됐으면 
-    if (status === kakao.maps.services.Status.OK) {
-
-        var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-
-        // 결과값으로 받은 위치를 마커로 표시합니다
-        var marker = new kakao.maps.Marker({
-            map: map,
-            position: coords
-        });  
-        
-        // 인포윈도우로 장소에 대한 설명을 표시합니다
-        
-
-        // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
-        map.setCenter(coords);
-        
-        var content = '<div class="wrap">' + 
-          '    <div class="info">' + 
-          '        <div class="title">' + 
-          '            {{ spot.title }}' + 
-          '        </div>' + 
-          '        <div class="body">' + 
-          '            <div class="img">' +
-            
-          '                <img src="{{ spot.image.url }}" width="73" height="70">' +
-          '           </div>' + 
-          '            <div class="desc">' + 
-          '                <div class="ellipsis">{{ spot.address }}</div>' + 
-          '                <div><a href={{ spot.website }} target="_blank" class="link">홈페이지</a></div>' + 
-          '            </div>' + 
-          '        </div>' + 
-          '    </div>' +    
-          '</div>';
-
-        // 마커 위에 커스텀오버레이를 표시합니다
-        // 마커를 중심으로 커스텀 오버레이를 표시하기위해 CSS를 이용해 위치를 설정했습니다
-        var overlay = new kakao.maps.CustomOverlay({
-          content: content,
-          map: map,
-          position: marker.getPosition()       
-        });
-        
-    }
-});    
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey={{ kakao_script_key }}&libraries=services"></script>
+    <script>
+      const latitude = {{ latitude }};
+      const longitude = {{ longitude }};
+      const container = document.getElementById('map');
+      const options = {
+          center: new kakao.maps.LatLng(latitude, longitude),
+          level: 3
+      };
+      const map = new kakao.maps.Map(container, options);
+      const markerPosition = new kakao.maps.LatLng(latitude, longitude);
+      const marker = new kakao.maps.Marker({
+          position: markerPosition
+      });
+      marker.setMap(map);
     
     
     $(document).ready(function() {
